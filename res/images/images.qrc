@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>hamburger.svg</file>
+        <file>hamburger.png</file>
+        <file>back.png</file>
+    </qresource>
+</RCC>
