@@ -1,41 +1,46 @@
-import QtQuick 2.5
+// source: https://gist.githubusercontent.com/cyberbobs/8d62ab257d332914a72c
+import QtQuick 2.9
+
 
 Item {
-  id: mainRect
+  id: root
 
-  property real radius: 3
+  property alias barsColor:root.bcolor
+  property color bcolor: "black"
+  property real xValue: (root.width-20)/2
+  property real yValue: (root.height-10)/2
 
   Rectangle {
     id: bar1
-    x: 0
-    y: parent.height * .25
-    width: parent.width
-    height: parent.height * .15
-    radius: parent.radius
+    color: bcolor
+    x: xValue
+    y: yValue
+    width: 20
+    height: 2
     antialiasing: true
   }
 
   Rectangle {
     id: bar2
-    x: 0
-    y: parent.height * .5
-    width: parent.width
-    height: parent.height * .15
-    radius: parent.radius
+    color: bcolor
+    x: xValue
+    y: yValue+5
+    width: 20
+    height: 2
     antialiasing: true
   }
 
   Rectangle {
     id: bar3
-    x: 0
-    y: parent.height * .75
-    width: parent.width
-    height: parent.height * .15
-    radius: parent.radius
+    color: bcolor
+    x: xValue
+    y: yValue+10
+    width: 20
+    height: 2
     antialiasing: true
   }
 
-  property int animationDuration: 350
+  property int animationDuration: 500
 
   state: "menu"
   states: [
@@ -45,16 +50,16 @@ Item {
 
     State {
       name: "back"
-      PropertyChanges { target: mainRect; rotation: 180 }
-      PropertyChanges { target: bar1; rotation: 45; width: mainRect.width * .6; x: mainRect.width * .48; y: mainRect.height * .33 - bar1.height }
-      PropertyChanges { target: bar2; width: mainRect.width * .8; x: mainRect.width * .2; y: mainRect.height * .5 - bar2.height }
-      PropertyChanges { target: bar3; rotation: -45; width: mainRect.width * .6; x: mainRect.width * .48; y: mainRect.height * .67 - bar3.height }
+      PropertyChanges { target: root; rotation: 180 }
+      PropertyChanges { target: bar1; rotation: 45; width: 13; x: xValue+7.5; y: yValue+3 }
+      PropertyChanges { target: bar2; width: 17; x: xValue+1; y: yValue+7 }
+      PropertyChanges { target: bar3; rotation: -45; width: 13; x: xValue+7.5; y: yValue+11 }
     }
   ]
 
   transitions: [
     Transition {
-      RotationAnimation { target: mainRect; direction: RotationAnimation.Clockwise; duration: animationDuration; easing.type: Easing.InOutQuad }
+      RotationAnimation { target: root; direction: RotationAnimation.Clockwise; duration: animationDuration; easing.type: Easing.InOutQuad }
       PropertyAnimation { target: bar1; properties: "rotation, width, x, y"; duration: animationDuration; easing.type: Easing.InOutQuad }
       PropertyAnimation { target: bar2; properties: "rotation, width, x, y"; duration: animationDuration; easing.type: Easing.InOutQuad }
       PropertyAnimation { target: bar3; properties: "rotation, width, x, y"; duration: animationDuration; easing.type: Easing.InOutQuad }

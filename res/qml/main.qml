@@ -4,9 +4,12 @@ import QtQuick.Controls 2.5
 ApplicationWindow {
   id: window
   visible: true
-  width: 640
-  height: 480
+  width: 411
+  height: 617
   title: qsTr("Stack")
+
+  property int wHeight: 960
+  property int wWidth: 540
 
   header: ToolBar {
     contentHeight: toolButton.implicitHeight
@@ -14,21 +17,32 @@ ApplicationWindow {
     ToolButton {
       id: toolButton
 
-      property url hamburgerIcon: "qrc:/images/hamburger.png"
-      property url backIcon: "qrc:/images/back.png"
+      Rectangle {
+        width: 40
+        height: 40
+        color: "transparent"
 
-      display: "IconOnly"
-      icon.color: "transparent"
-      icon.source: stackView.depth > 1 ? backIcon : hamburgerIcon
+        MouseArea {
+          anchors.fill: parent
+          onClicked: {
+            menuBackIcon.state = menuBackIcon.state === "menu" ? "back" : "menu"
+            if (stackView.depth > 1) {
+              stackView.pop()
+            } else if (drawer.position === 1.0) {
+              drawer.close()
+            } else {
+              drawer.open()
+            }
+          }
+        }
 
-      font.pixelSize: Qt.application.font.pixelSize * 1.6
-      onClicked: {
-        if (stackView.depth > 1) {
-          stackView.pop()
-        } else {
-          drawer.open()
+        MenuBackIcon {
+          id: menuBackIcon
+          anchors.centerIn: parent
         }
       }
+
+      font.pixelSize: Qt.application.font.pixelSize * 1.6
     }
 
     Label {
@@ -39,25 +53,27 @@ ApplicationWindow {
 
   Drawer {
     id: drawer
+    x: 0
+    y: toolButton.implicitHeight
     width: window.width * 0.66
-    height: window.height
+    height: window.height - toolButton.implicitHeight
 
     Column {
       anchors.fill: parent
 
       ItemDelegate {
-        text: qsTr("Page 1")
+        text: qsTr("New Game")
         width: parent.width
         onClicked: {
-          stackView.push("Page1Form.ui.qml")
+          stackView.push("NewGameForm.ui.qml")
           drawer.close()
         }
       }
       ItemDelegate {
-        text: qsTr("Page 2")
+        text: qsTr("Scan Cards")
         width: parent.width
         onClicked: {
-          stackView.push("Page2Form.ui.qml")
+          stackView.push("ScanCardsForm.ui.qml")
           drawer.close()
         }
       }
@@ -66,7 +82,7 @@ ApplicationWindow {
 
   StackView {
     id: stackView
-    initialItem: "HomeForm.ui.qml"
+    initialItem: "HomeForm.qml"
     anchors.fill: parent
   }
 }
