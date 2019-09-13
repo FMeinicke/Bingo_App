@@ -10,8 +10,15 @@
 //============================================================================
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 #include <QTime>
 
+#include "ScoreCardModel.h"
+#include "ScoreCardNumberField.h"
+
+/**
+ * @brief A custom message handler for formatting console output.
+ */
 void myMessageOutput(QtMsgType type, const QMessageLogContext& context, const QString& msg)
 {
     QByteArray localMsg = msg.toLocal8Bit();
@@ -46,6 +53,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext& context, const QS
     fflush(stdout);
 }
 
+//============================================================================
 int main(int argc, char* argv[])
 {
     // just for nicer debug output
@@ -56,6 +64,25 @@ int main(int argc, char* argv[])
     QGuiApplication App(argc, argv);
 
     QQmlApplicationEngine Engine;
+
+    // make C++ classes available to QML
+//    CScoreCardModel ScoreCardModel;
+//    Engine.rootContext()->setContextProperty("scoreCardModel", &ScoreCardModel);
+
+    QList<QObject*> ScoreCard;
+    for (int i = 0; i < 25; ++i)
+    {
+        const auto ColumnId = i % 5 + 1;
+        // for each column there are 15 different number to pick from randomly
+        constexpr auto MaxColumnNumberCount = 15;
+        int Num = 1 + rand() % (MaxColumnNumberCount * ColumnId);
+        ScoreCard.append(new CScoreCardNumberField(Num));
+    }
+    Engine.rootContext()->setContextProperty("scoreCardModel",
+                                             QVariant::fromValue(ScoreCard));
+
+
+    // auto generated code
     const QUrl Url(QStringLiteral("qrc:/qml/main.qml"));
     QObject::connect(&Engine, &QQmlApplicationEngine::objectCreated,
                      &App, [Url](QObject* Obj, const QUrl& ObjUrl) {
