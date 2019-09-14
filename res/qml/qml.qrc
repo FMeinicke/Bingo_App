@@ -4,9 +4,11 @@
         <file>main.qml</file>
         <file>NewGameForm.ui.qml</file>
         <file>EnterCardsForm.ui.qml</file>
-        <file>qtquickcontrols2.conf</file>
         <file>MenuBackIcon.qml</file>
         <file>ScanCardsForm.ui.qml</file>
         <file>MenuButton.qml</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>qtquickcontrols2.conf</file>
     </qresource>
 </RCC>
