@@ -20,6 +20,7 @@ Button {
   Layout.preferredHeight: parent.height / 6
 
   text: qsTr(title)
+  font.pointSize: 20
 
   //  background: Rectangle {
   //      color: "#ffffff"
@@ -34,7 +35,8 @@ Button {
   //      }
   //  }
   onClicked: {
-    menuBackIcon.state = "back"
-    stackView.push(qmlFile)
+    if (qmlFile) {
+      stackView.push(qmlFile)
+    }
   }
 }
