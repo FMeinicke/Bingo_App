@@ -5,8 +5,8 @@ import QtQuick.Window 2.12
 ApplicationWindow {
   id: window
   visible: true
-  width: ScreenInfo.width
-  height: ScreenInfo.height
+  width: Screen.width
+  height: Screen.height
   title: qsTr("Stack")
 
   property int wHeight: 960
@@ -44,39 +44,50 @@ ApplicationWindow {
     id: stackView
     anchors.fill: parent
 
-    // Implements back key navigation
-    focus: true
-
     initialItem: "ChooseGameForm.ui.qml"
 
+    // Implements back key navigation
+    focus: true
     property bool wantsQuit: false
+
+    Timer {
+      id: timer
+      interval: 3000
+      running: stackView.wantsQuit
+      repeat: false
+      onTriggered: {
+        // user didn't press back twice within the small intervall - doesn't want to quit
+        stackView.wantsQuit = false
+      }
+    }
 
     ToolTip {
       id: quitMsg
       text: qsTr("Press again to quit...")
-
-      // don't steal focus from the stackView
-      focus: false
       y: parent.height - 50
-      visible: wantsQuit
-      timeout: 3000
+      visible: stackView.wantsQuit
+      timeout: 1500
       delay: 500
+
+      onClosed: {
+        if (stackView.wantsQuit) {
+          // user pressed back button twice within a small intervall- quit app
+          window.close()
+        }
+      }
     }
 
     Keys.onBackPressed: {
       if (depth > 1) {
-        wantsQuit = false
         // if not on the main page, don't close the app on back key press
         // just go back one page
+        wantsQuit = false
         pop()
       } else if (!wantsQuit) {
         // close on next back button press
         wantsQuit = true
-        quitMsg.open()
-        // don't lose focus to the message
-        forceActiveFocus()
-      } else {
-        // user pressed back button twice - quit app
+      } else if (timer.running === true) {
+        // user pressed back button twice within a small intervall- quit app
         window.close()
       }
     }

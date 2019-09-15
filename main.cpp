@@ -56,9 +56,10 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext& context, const QS
 //============================================================================
 int main(int argc, char* argv[])
 {
+#ifndef Q_OS_ANDROID
     // just for nicer debug output
     qInstallMessageHandler(myMessageOutput);
-
+#endif
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication App(argc, argv);
