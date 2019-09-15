@@ -4,35 +4,53 @@
 /// \date   13.09.2019
 /// \brief  A form displaying one bingo score card
 //============================================================================
-import QtQuick 2.4
+import QtQuick 2.12
+import QtQuick.Controls 2.12
+import QtQuick.Window 2.3
 
 Item {
+  id: root
+
   width: 350
   height: 420
+
+  Image {
+    id: backgroundImage
+
+    property int padding: 22
+    fillMode: Image.PreserveAspectFit
+
+    // image from https://www.wikihow.com/Sample/Bingo-Card
+    source: "qrc:/images/score_card.png"
+    anchors.fill: parent
+  }
 
   GridView {
     id: gridView
     interactive: false
-    anchors.fill: parent
+    width: 5 * cellWidth
+    height: 5 * cellHeight
+    x: backgroundImage.padding
+    y: root.height - height - backgroundImage.padding / 2
+
     model: scoreCardModel
+    cellHeight: 63
+    cellWidth: 61
     delegate: Item {
-      x: 5
-      height: 50
+      id: wrapper
+      width: gridView.cellWidth
+      height: gridView.cellHeight
       Text {
-        x: 5
-        text: model.modelData.number
+        property int numberData: model.modelData.number
+
+        // center field is a free field and has '0' as data -> shouldn't be displayed
+        text: numberData > 0 ? numberData : ""
         font.bold: true
-        anchors.horizontalCenter: parent.horizontalCenter
+        fontSizeMode: Text.Fit
+        font.pixelSize: 30
+        minimumPixelSize: 12
+        anchors.centerIn: parent
       }
     }
-    cellHeight: 70
-    cellWidth: 70
   }
 }
-
-/*##^##
-Designer {
-    D{i:1;anchors_height:140;anchors_width:140;anchors_x:127;anchors_y:149}
-}
-##^##*/
-

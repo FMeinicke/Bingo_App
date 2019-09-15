@@ -3,5 +3,6 @@
         <file>hamburger.svg</file>
         <file>hamburger.png</file>
         <file>back.png</file>
+        <file>score_card.png</file>
     </qresource>
 </RCC>

@@ -77,6 +77,10 @@ int main(int argc, char* argv[])
         // for each column there are 15 different number to pick from randomly
         constexpr auto MaxColumnNumberCount = 15;
         int Num = 1 + rand() % (MaxColumnNumberCount * ColumnId);
+        if (i == 12)
+        {
+            Num = 0;
+        }
         ScoreCard.append(new CScoreCardNumberField(Num));
     }
     Engine.rootContext()->setContextProperty("scoreCardModel",
