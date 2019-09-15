@@ -48,7 +48,5 @@ DISTFILES += \
     android/res/values/libs.xml \
     android/res/values/strings.xml
 
-contains(ANDROID_TARGET_ARCH,x86) {
-    ANDROID_PACKAGE_SOURCE_DIR = \
-        $$PWD/android
-}
+ANDROID_PACKAGE_SOURCE_DIR = \
+    $$PWD/android
