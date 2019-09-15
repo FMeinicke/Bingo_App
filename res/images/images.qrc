@@ -4,5 +4,6 @@
         <file>hamburger.png</file>
         <file>back.png</file>
         <file>score_card.png</file>
+        <file>settings.png</file>
     </qresource>
 </RCC>

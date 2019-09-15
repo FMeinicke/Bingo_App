@@ -1,6 +1,6 @@
 import QtQuick 2.12
-import QtQuick.Controls 2.5
-import QtQuick.Window 2.12
+import QtQuick.Controls 2.12
+import QtQuick.Window 2.3
 
 ApplicationWindow {
   id: window
@@ -8,22 +8,48 @@ ApplicationWindow {
   width: Screen.width
   height: Screen.height
 
-  header: Item {
-    id: header
+  header: ToolBar {
+    contentHeight: label.height
 
-    implicitHeight: label.implicitHeight
+    ToolButton {
+      id: toolButton
+
+      Rectangle {
+        width: label.height
+        height: label.height
+        color: "transparent"
+
+        MouseArea {
+          anchors.fill: parent
+          onClicked: {
+            menuBackIcon.state = menuBackIcon.state === "menu" ? "back" : "menu"
+            if (stackView.depth > 1) {
+              stackView.pop()
+            } else if (drawer.position === 1.0) {
+              drawer.close()
+            } else {
+              drawer.open()
+            }
+          }
+        }
+
+        MenuBackIcon {
+          id: menuBackIcon
+          anchors.centerIn: parent
+        }
+      }
+    }
 
     Label {
       id: label
-      height: 75
-      width: window.width
+      text: qsTr("Mobile Bingo")
+      font.pixelSize: Qt.application.font.pixelSize * 1.6
+      color: "black"
 
+      height: 50
+      width: window.width
       verticalAlignment: Text.AlignVCenter
       horizontalAlignment: Text.AlignHCenter
-
-      text: qsTr("Mobile Bingo")
-      color: "black"
-      font.pointSize: 30
     }
   }
 
@@ -41,6 +67,10 @@ ApplicationWindow {
         text: qsTr("Settings")
         width: parent.width
         anchors.verticalCenterOffset: height / 2 - 50
+        topPadding: window.height
+
+        icon.source: "qrc:/images/settings.png"
+
         onClicked: {
           stackView.push("SettingsForm.ui.qml")
           drawer.close()
