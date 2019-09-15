@@ -7,15 +7,24 @@ ApplicationWindow {
   visible: true
   width: Screen.width
   height: Screen.height
-  title: qsTr("Stack")
 
-  property int wHeight: 960
-  property int wWidth: 540
+  header: Item {
+    id: header
 
-  header: Text {
-    id: appName
-    text: qsTr("Mobile Bingo")
-    height: 40
+    implicitHeight: label.implicitHeight
+
+    Label {
+      id: label
+      height: 75
+      width: window.width
+
+      verticalAlignment: Text.AlignVCenter
+      horizontalAlignment: Text.AlignHCenter
+
+      text: qsTr("Mobile Bingo")
+      color: "black"
+      font.pointSize: 30
+    }
   }
 
   Drawer {
