@@ -61,7 +61,7 @@ ApplicationWindow {
 
     Timer {
       id: timer
-      interval: 3000
+      interval: 2000
       running: stackView.wantsQuit
       repeat: false
       onTriggered: {
@@ -75,7 +75,7 @@ ApplicationWindow {
       text: qsTr("Press again to quit...")
       y: parent.height - 50
       visible: stackView.wantsQuit
-      timeout: 1500
+      timeout: 2100
       delay: 500
 
       onClosed: {
