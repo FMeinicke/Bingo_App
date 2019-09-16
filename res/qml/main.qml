@@ -67,7 +67,7 @@ ApplicationWindow {
         text: qsTr("Settings")
         width: parent.width
         anchors.verticalCenterOffset: height / 2 - 50
-        topPadding: window.height
+        topPadding: window.height - 100
 
         icon.source: "qrc:/images/settings.png"
 
