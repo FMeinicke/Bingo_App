@@ -8,12 +8,13 @@
 //============================================================================
 //                                   INCLUDES
 //============================================================================
+#include <QDebug>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QTime>
 
-#include "ScoreCardModel.h"
+#include "ScoreCard.h"
 #include "ScoreCardNumberField.h"
 
 /**
@@ -67,25 +68,11 @@ int main(int argc, char* argv[])
     QQmlApplicationEngine Engine;
 
     // make C++ classes available to QML
-//    CScoreCardModel ScoreCardModel;
-//    Engine.rootContext()->setContextProperty("scoreCardModel", &ScoreCardModel);
-
-    QList<QObject*> ScoreCard;
-    for (int i = 0; i < 25; ++i)
-    {
-        const auto ColumnId = i % 5 + 1;
-        // for each column there are 15 different number to pick from randomly
-        constexpr auto MaxColumnNumberCount = 15;
-        int Num = 1 + rand() % (MaxColumnNumberCount * ColumnId);
-        if (i == 12)
-        {
-            Num = 0;
-        }
-        ScoreCard.append(new CScoreCardNumberField(Num));
-    }
+    qmlRegisterType<CScoreCardNumberField>(
+                "de.dhge.moco.fm.ScoreCardNumberField", 1, 0,
+                "ScoreCardNumberFieldType");
     Engine.rootContext()->setContextProperty("scoreCardModel",
-                                             QVariant::fromValue(ScoreCard));
-
+                                             QVariant::fromValue(CScoreCard::makeRandomScoreCard()));
 
     // auto generated code
     const QUrl Url(QStringLiteral("qrc:/qml/main.qml"));

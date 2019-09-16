@@ -24,7 +24,6 @@ Page {
     anchors.top: parent.top
     anchors.topMargin: root.offset
     anchors.horizontalCenter: parent.horizontalCenter
-    Component.onCompleted: console.log(parent.top)
   }
 
   TextField {

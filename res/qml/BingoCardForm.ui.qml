@@ -7,6 +7,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Window 2.3
+import de.dhge.moco.fm.ScoreCardNumberField 1.0
 
 Item {
   id: root
@@ -23,7 +24,7 @@ Item {
 
     fillMode: Image.PreserveAspectFit
 
-    // image from https://www.wikihow.com/Sample/Bingo-Card
+    // image taken from https://www.wikihow.com/Sample/Bingo-Card
     source: "qrc:/images/score_card.png"
     anchors.fill: parent
   }
@@ -45,9 +46,11 @@ Item {
       height: gridView.cellHeight
       Text {
         property int numberData: model.modelData.number
+        property int fieldTypeData: model.modelData.fieldType
+        property int markedData: model.modelData.marked
 
-        // center field is a free field and has '0' as data -> shouldn't be displayed
-        text: numberData > 0 ? numberData : ""
+        // center field is a free field -> it's number shouldn't be displayed
+        text: fieldTypeData === ScoreCardNumberFieldType.FREE_SPACE ? "" : numberData
         font.bold: true
         fontSizeMode: Text.Fit
         font.pixelSize: 30

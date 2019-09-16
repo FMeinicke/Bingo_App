@@ -11,43 +11,18 @@
 #include "ScoreCardNumberField.h"
 
 //============================================================================
-CScoreCardNumberField::CScoreCardNumberField(int number, QObject* parent) :
+CScoreCardNumberField::CScoreCardNumberField(int number, eFieldType type, QObject* parent) :
     QObject(parent),
     m_Number{number},
+    m_FieldType{type},
     m_Marked{false}
 {
 }
 
-////============================================================================
-//CScoreCardNumberField::CScoreCardNumberField(const CScoreCardNumberField& rhs) :
-//    QObject(nullptr),
-//    m_Number{rhs.m_Number},
-//    m_Marked{rhs.m_Marked}
-//{
-//}
-
-////============================================================================
-//CScoreCardNumberField::CScoreCardNumberField(CScoreCardNumberField&& rhs) :
-//    m_Number{rhs.m_Number},
-//    m_Marked{rhs.m_Marked}
-//{
-//}
-
-////============================================================================
-//CScoreCardNumberField& CScoreCardNumberField::operator=(const CScoreCardNumberField& rhs)
-//{
-//    m_Number = rhs.m_Number;
-//    m_Marked = rhs.m_Marked;
-//    return *this;
-//}
-
-////============================================================================
-//CScoreCardNumberField& CScoreCardNumberField::operator=(CScoreCardNumberField&& rhs)
-//{
-//    m_Number = rhs.m_Number;
-//    m_Marked = rhs.m_Marked;
-//    return *this;
-//}
+CScoreCardNumberField::CScoreCardNumberField(QObject* parent) :
+    QObject(parent)
+{
+}
 
 //============================================================================
 bool CScoreCardNumberField::isMarked() const
@@ -59,6 +34,7 @@ bool CScoreCardNumberField::isMarked() const
 void CScoreCardNumberField::mark(bool marked)
 {
     m_Marked = marked;
+    emit markedChanged();
 }
 
 //============================================================================
@@ -71,4 +47,16 @@ int CScoreCardNumberField::number() const
 void CScoreCardNumberField::setNumber(int number)
 {
     m_Number = number;
+    emit numberChanged();
+}
+
+CScoreCardNumberField::eFieldType CScoreCardNumberField::fieldType() const
+{
+    return m_FieldType;
+}
+
+void CScoreCardNumberField::setFieldType(const eFieldType& fieldType)
+{
+    m_FieldType = fieldType;
+    emit fieldTypeChanged();
 }

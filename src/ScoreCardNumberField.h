@@ -10,49 +10,42 @@
 //============================================================================
 //                                   INCLUDES
 //============================================================================
-
 #include <QObject>
 
 /**
  * @brief The CScoreCardNumber class represents one number in a field on a bingo
- * score card. The number can be marked or unmarked.
+ * scorcard. The number can be marked or unmarked.
  */
 class CScoreCardNumberField : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(int number READ number WRITE setNumber)
-    Q_PROPERTY(bool marked READ isMarked WRITE mark)
+    Q_PROPERTY(int number READ number WRITE setNumber NOTIFY numberChanged)
+    Q_PROPERTY(bool marked READ isMarked WRITE mark NOTIFY markedChanged)
+    Q_PROPERTY(eFieldType fieldType READ fieldType WRITE setFieldType NOTIFY fieldTypeChanged)
 
 public:
     /**
-     * @brief Construct a new CScoreCardNumber initialized with @a number and
-     * @a parent as the parent object.
+     * @brief The FieldType enum specifies the two different types of fields on
+     * a scorecard.
      */
-    CScoreCardNumberField(int number, QObject* parent = nullptr);
+    enum eFieldType
+    {
+        FREE_SPACE, ///< the free space in the denter of the scorecard
+        NORMAL_SPACE, ///< ay other field on the scorecard
+    };
+    Q_ENUM(eFieldType);
 
-//    /**
-//     * @brief Copy c'tor
-//     */
-//    CScoreCardNumberField(const CScoreCardNumberField& rhs);
+    /**
+     * @brief Construct a new CScoreCardNumber initialized with @a number,
+     * @a type and @a parent as the parent object.
+     */
+    CScoreCardNumberField(int number, eFieldType type = NORMAL_SPACE, QObject* parent = nullptr);
 
-//    /**
-//     * @brief Move c'tor
-//     */
-//    CScoreCardNumberField(CScoreCardNumberField&& rhs);
-
-//    /**
-//     * @brief Copy assignment operator
-//     */
-//    CScoreCardNumberField& operator= (const CScoreCardNumberField& rhs);
-
-//    /**
-//     * @brief Move assignment operator
-//     */
-//    CScoreCardNumberField& operator= (CScoreCardNumberField&& rhs);
-
-
-//    ~CScoreCardNumberField() override = default;
+    /**
+     * @brief Default c'tor
+     */
+    CScoreCardNumberField(QObject* parent = nullptr);
 
     /**
      * @brief Returns whether this number is marked or not
@@ -76,12 +69,37 @@ public:
      */
     void setNumber(int number);
 
+    /**
+     * @brief Returns the type of this number field
+     */
+    eFieldType fieldType() const;
+
+    /**
+     * @brief Set the type of this number field to @a fieldType
+     */
+    void setFieldType(const eFieldType& fieldType);
+
 signals:
+    /**
+     * @brief This field is emitted every time the number of the field changed.
+     */
+    void numberChanged();
+
+    /**
+     * @brief This signal is mitted every time the field is marked or cleared.
+     */
+    void markedChanged();
+
+    /**
+     * @brief This signal is mitted every time the field is marked or cleared.
+     */
+    void fieldTypeChanged();
 
 public slots:
 
 private:
     int m_Number{};
+    eFieldType m_FieldType{};
     bool m_Marked{};
 };
 
