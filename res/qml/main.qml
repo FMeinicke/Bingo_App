@@ -23,9 +23,7 @@ ApplicationWindow {
           anchors.fill: parent
           onClicked: {
             menuBackIcon.state = menuBackIcon.state === "menu" ? "back" : "menu"
-            if (stackView.depth > 1) {
-              stackView.pop()
-            } else if (drawer.position === 1.0) {
+            if (drawer.position === 1.0) {
               drawer.close()
             } else {
               drawer.open()
@@ -59,6 +57,8 @@ ApplicationWindow {
     y: header.implicitHeight
     width: window.width * 0.66
     height: window.height - header.implicitHeight
+
+    onClosed: menuBackIcon.state = "menu"
 
     Column {
       anchors.fill: parent
