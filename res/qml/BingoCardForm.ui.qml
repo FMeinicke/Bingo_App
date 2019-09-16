@@ -18,6 +18,9 @@ Item {
     id: backgroundImage
 
     property int padding: 22
+    property double ratio: (height + padding) / implicitHeight
+    property int cellSize: 100 * ratio
+
     fillMode: Image.PreserveAspectFit
 
     // image from https://www.wikihow.com/Sample/Bingo-Card
@@ -28,14 +31,14 @@ Item {
   GridView {
     id: gridView
     interactive: false
+    cellHeight: backgroundImage.cellSize
+    cellWidth: backgroundImage.cellSize
     width: 5 * cellWidth
     height: 5 * cellHeight
     x: backgroundImage.padding
-    y: root.height - height - backgroundImage.padding / 2
+    y: backgroundImage.cellSize + 3 * backgroundImage.padding / 2
 
     model: scoreCardModel
-    cellHeight: 63
-    cellWidth: 61
     delegate: Item {
       id: wrapper
       width: gridView.cellWidth
