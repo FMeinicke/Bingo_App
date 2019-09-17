@@ -7,6 +7,8 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Window 2.3
+import QtQuick.Controls.Material 2.12
+import QtGraphicalEffects 1.0
 import de.dhge.moco.fm.ScoreCardNumberField 1.0
 
 Item {
@@ -44,11 +46,10 @@ Item {
       id: wrapper
       width: gridView.cellWidth
       height: gridView.cellHeight
+      property int numberData: model.modelData.number
+      property int fieldTypeData: model.modelData.fieldType
+      property int markedData: model.modelData.marked
       Text {
-        property int numberData: model.modelData.number
-        property int fieldTypeData: model.modelData.fieldType
-        property int markedData: model.modelData.marked
-
         // center field is a free field -> it's number shouldn't be displayed
         text: fieldTypeData === ScoreCardNumberFieldType.FREE_SPACE ? "" : numberData
         font.bold: true
@@ -56,6 +57,33 @@ Item {
         font.pixelSize: 30
         minimumPixelSize: 12
         anchors.centerIn: parent
+      }
+      Rectangle {
+        id: marking
+
+        visible: markedData
+
+        anchors.fill: parent
+        scale: 0.9
+
+        color: Material.primary
+        opacity: 0.5
+        radius: 50
+      }
+
+      InnerShadow {
+        visible: markedData
+
+        anchors.fill: marking
+        source: marking
+
+        radius: 2.0
+        samples: 16
+        horizontalOffset: -7
+        verticalOffset: 7
+
+        color: "#b0000000"
+        opacity: marking.opacity
       }
     }
   }
