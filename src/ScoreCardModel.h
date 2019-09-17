@@ -12,10 +12,7 @@
 //============================================================================
 #include <QAbstractListModel>
 
-//============================================================================
-//                            FORWARD DECLARATIONS
-//============================================================================
-class CScoreCardNumberField;
+#include "ScoreCardNumberField.h"
 
 /**
  * @brief The CScoreCard class represents a single bingo scorecard
@@ -51,19 +48,28 @@ public:
      */
     int rowCount(const QModelIndex& /*parent*/) const override;
 
+    /**
+     * @reimp
+     * @brief Returns the model's role names
+     */
     QHash<int, QByteArray> roleNames() const override;
+
+    /**
+     * @brief Mark the given @a Number on the scorecard.
+     */
+    Q_INVOKABLE void markNumber(const QString& Number);
 
 private:
     /**
      * @brief Creates a scorecard with randomly filled number fields.
      */
-    static QList<CScoreCardNumberField*> makeRandomScoreCard();
+    static QList<CScoreCardNumberField> makeRandomScoreCard();
 
 
     static constexpr int m_NumFields{25};
     static constexpr int m_NumColumns{5};
 
-    QList<CScoreCardNumberField*> m_ScoreCard;
+    QList<CScoreCardNumberField> m_ScoreCard;
 };
 
 #endif // CSCORECARDMODEL_H

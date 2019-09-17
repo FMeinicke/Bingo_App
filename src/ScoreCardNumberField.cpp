@@ -1,8 +1,8 @@
 //============================================================================
-/// \file   ScoreCardNumber.cpp
+/// \file   ScoreCardNumberField.cpp
 /// \author Florian Meinicke <florian.meinicke@t-online.de>
 /// \date   13.09.2019
-/// \brief  Implementation of the CScoreCardNumber class.
+/// \brief  Implementation of the CScoreCardNumberField class.
 //============================================================================
 
 //============================================================================
@@ -19,9 +19,46 @@ CScoreCardNumberField::CScoreCardNumberField(int number, eFieldType type, QObjec
 {
 }
 
+//============================================================================
 CScoreCardNumberField::CScoreCardNumberField(QObject* parent) :
     QObject(parent)
 {
+}
+
+//============================================================================
+CScoreCardNumberField::CScoreCardNumberField(const CScoreCardNumberField& rhs) :
+    QObject(rhs.parent()),
+    m_Number{rhs.m_Number},
+    m_FieldType{rhs.m_FieldType},
+    m_Marked{rhs.m_Marked}
+{
+}
+
+//============================================================================
+CScoreCardNumberField::CScoreCardNumberField(CScoreCardNumberField&& rhs) noexcept :
+    QObject(rhs.parent()),
+    m_Number{rhs.m_Number},
+    m_FieldType{rhs.m_FieldType},
+    m_Marked{rhs.m_Marked}
+{
+}
+
+//============================================================================
+CScoreCardNumberField& CScoreCardNumberField::operator=(const CScoreCardNumberField& rhs)
+{
+    m_Number = rhs.m_Number;
+    m_FieldType = rhs.m_FieldType;
+    m_Marked = rhs.m_Marked;
+    return *this;
+}
+
+//============================================================================
+CScoreCardNumberField& CScoreCardNumberField::operator=(CScoreCardNumberField&& rhs) noexcept
+{
+    m_Number = rhs.m_Number;
+    m_FieldType = rhs.m_FieldType;
+    m_Marked = rhs.m_Marked;
+    return *this;
 }
 
 //============================================================================
@@ -34,7 +71,6 @@ bool CScoreCardNumberField::isMarked() const
 void CScoreCardNumberField::mark(bool marked)
 {
     m_Marked = marked;
-//    emit markedChanged();
 }
 
 //============================================================================
@@ -47,7 +83,6 @@ int CScoreCardNumberField::number() const
 void CScoreCardNumberField::setNumber(int number)
 {
     m_Number = number;
-//    emit numberChanged();
 }
 
 CScoreCardNumberField::eFieldType CScoreCardNumberField::fieldType() const
@@ -58,5 +93,13 @@ CScoreCardNumberField::eFieldType CScoreCardNumberField::fieldType() const
 void CScoreCardNumberField::setFieldType(const eFieldType& fieldType)
 {
     m_FieldType = fieldType;
-//    emit fieldTypeChanged();
+}
+
+
+//============================================================================
+bool CScoreCardNumberField::operator==(const CScoreCardNumberField& rhs) const
+{
+    return m_Number == rhs.m_Number
+           && m_FieldType == rhs.m_FieldType
+           && m_Marked == rhs.m_Marked;
 }

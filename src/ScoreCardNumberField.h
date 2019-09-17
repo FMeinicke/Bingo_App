@@ -1,11 +1,11 @@
 //============================================================================
-/// \file   ScoreCardNumber.h
+/// \file   ScoreCardNumberField.h
 /// \author Florian Meinicke <florian.meinicke@t-online.de>
 /// \date   13.09.2019
-/// \brief  Declaration of the CScoreCardNumber class.
+/// \brief  Declaration of the CScoreCardNumberField class.
 //============================================================================
-#ifndef CSCORECARDNUMBER_H
-#define CSCORECARDNUMBER_H
+#ifndef CSCORECARDNUMBERFIELD_H
+#define CSCORECARDNUMBERFIELD_H
 
 //============================================================================
 //                                   INCLUDES
@@ -43,6 +43,32 @@ public:
     CScoreCardNumberField(QObject* parent = nullptr);
 
     /**
+     * @brief Copy c'tor
+     */
+    CScoreCardNumberField(const CScoreCardNumberField& rhs);
+
+    /**
+     * @brief Move c'tor
+     */
+    CScoreCardNumberField(CScoreCardNumberField&& rhs) noexcept;
+
+    /**
+     * @brief Copy assignment operator
+     */
+    CScoreCardNumberField& operator=(const CScoreCardNumberField& rhs);
+
+    /**
+     * @brief Move assignment operator
+     */
+    CScoreCardNumberField& operator=(CScoreCardNumberField&& rhs) noexcept;
+
+    /**
+     * @brief D'tor
+     */
+    ~CScoreCardNumberField() override = default;
+
+
+    /**
      * @brief Returns whether this number is marked or not
      * @returns true if marked, false otherwise
      */
@@ -74,6 +100,11 @@ public:
      */
     void setFieldType(const eFieldType& fieldType);
 
+    /**
+     * @brief Returns if the field @a rhs is equal to this number field.
+     */
+    bool operator==(const CScoreCardNumberField& rhs) const;
+
 signals:
 
 public slots:
@@ -84,4 +115,4 @@ private:
     bool m_Marked{};
 };
 
-#endif // CSCORECARDNUMBER_H
+#endif // CSCORECARDNUMBERFIELD_H

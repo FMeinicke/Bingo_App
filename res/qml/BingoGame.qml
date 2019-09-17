@@ -51,6 +51,9 @@ Page {
 
     onPressed: clear()
 
-    //    onEditingFinished: scoreCardModel.markNumber(displayText)
+    onEditingFinished: {
+      // strip off the first character (i.e. the letter)
+      scoreCardModel.markNumber(displayText.substr(1))
+    }
   }
 }

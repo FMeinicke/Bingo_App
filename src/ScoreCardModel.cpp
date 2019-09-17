@@ -10,8 +10,6 @@
 //============================================================================
 #include "ScoreCardModel.h"
 
-#include "ScoreCardNumberField.h"
-
 #include <QDebug>
 
 #include <unordered_map>
@@ -31,11 +29,11 @@ QVariant CScoreCardModel::data(const QModelIndex& index, int role) const
     switch (role)
     {
     case NumberRole:
-        return m_ScoreCard[index.row()]->number();
+        return m_ScoreCard[index.row()].number();
     case FieldTypeRole:
-        return m_ScoreCard[index.row()]->fieldType();
+        return m_ScoreCard[index.row()].fieldType();
     case MarkedRole:
-        return m_ScoreCard[index.row()]->isMarked();
+        return m_ScoreCard[index.row()].isMarked();
     default:
         qWarning() << "Unknown role" << role << "for CScoreCardModel::data";
         return QVariant();
@@ -58,11 +56,31 @@ QHash<int, QByteArray> CScoreCardModel::roleNames() const
     return Roles;
 }
 
+//============================================================================
+void CScoreCardModel::markNumber(const QString& Number)
+{
+    bool ok;
+    const auto IntNumber = Number.toInt(&ok);
+    if (!ok)
+    {
+        qWarning() << "The given number" << Number << "is not a valid Bingo number!";
+        return;
+    }
+
+    const auto FieldIndex = m_ScoreCard.indexOf(CScoreCardNumberField(IntNumber));
+    if (FieldIndex > -1)
+    {
+        m_ScoreCard[FieldIndex].mark();
+        const auto FieldModelIndex = createIndex(FieldIndex, 0);
+        emit dataChanged(FieldModelIndex, FieldModelIndex, {MarkedRole});
+    }
+}
+
 
 //============================================================================
-QList<CScoreCardNumberField*> CScoreCardModel::makeRandomScoreCard()
+QList<CScoreCardNumberField> CScoreCardModel::makeRandomScoreCard()
 {
-    QList<CScoreCardNumberField*> ScoreCard;
+    QList<CScoreCardNumberField> ScoreCard;
 
     // for each column there are 15 different number to pick from randomly
     constexpr auto MAX_COL_NUMBER_COUNT = 15;
@@ -95,7 +113,7 @@ QList<CScoreCardNumberField*> CScoreCardModel::makeRandomScoreCard()
                                      MAX_COL_NUMBER_COUNT * ColumnId);
         const auto Type = i == 12 ? CScoreCardNumberField::FREE_SPACE :
                                     CScoreCardNumberField::NORMAL_SPACE;
-        ScoreCard.append(new CScoreCardNumberField(Num, Type));
+        ScoreCard.append(CScoreCardNumberField(Num, Type));
     }
 
     return ScoreCard;
