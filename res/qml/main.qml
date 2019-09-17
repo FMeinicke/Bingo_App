@@ -58,6 +58,7 @@ ApplicationWindow {
     width: window.width * 0.66
     height: window.height - header.implicitHeight
 
+    onOpened: menuBackIcon.state = "back"
     onClosed: menuBackIcon.state = "menu"
 
     Column {
