@@ -50,5 +50,7 @@ Page {
     cursorVisible: false
 
     onPressed: clear()
+
+    //    onEditingFinished: scoreCardModel.markNumber(displayText)
   }
 }

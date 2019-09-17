@@ -46,12 +46,9 @@ Item {
       id: wrapper
       width: gridView.cellWidth
       height: gridView.cellHeight
-      property int numberData: model.modelData.number
-      property int fieldTypeData: model.modelData.fieldType
-      property int markedData: model.modelData.marked
       Text {
         // center field is a free field -> it's number shouldn't be displayed
-        text: fieldTypeData === ScoreCardNumberFieldType.FREE_SPACE ? "" : numberData
+        text: fieldType === ScoreCardNumberFieldType.FREE_SPACE ? "" : number
         font.bold: true
         fontSizeMode: Text.Fit
         font.pixelSize: 30
@@ -61,7 +58,7 @@ Item {
       Rectangle {
         id: marking
 
-        visible: markedData
+        visible: marked
 
         anchors.fill: parent
         scale: 0.9
@@ -72,10 +69,9 @@ Item {
       }
 
       InnerShadow {
-        visible: markedData
-
-        anchors.fill: marking
         source: marking
+        anchors.fill: marking
+        visible: marking.visible
 
         radius: 2.0
         samples: 16

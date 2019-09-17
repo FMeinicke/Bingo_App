@@ -8,13 +8,12 @@
 //============================================================================
 //                                   INCLUDES
 //============================================================================
-#include <QDebug>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QTime>
 
-#include "ScoreCard.h"
+#include "ScoreCardModel.h"
 #include "ScoreCardNumberField.h"
 
 /**
@@ -71,8 +70,8 @@ int main(int argc, char* argv[])
     qmlRegisterType<CScoreCardNumberField>(
                 "de.dhge.moco.fm.ScoreCardNumberField", 1, 0,
                 "ScoreCardNumberFieldType");
-    Engine.rootContext()->setContextProperty("scoreCardModel",
-                                             QVariant::fromValue(CScoreCard::makeRandomScoreCard()));
+    CScoreCardModel ScoreCardModel;
+    Engine.rootContext()->setContextProperty("scoreCardModel", &ScoreCardModel);
 
     // auto generated code
     const QUrl Url(QStringLiteral("qrc:/qml/main.qml"));

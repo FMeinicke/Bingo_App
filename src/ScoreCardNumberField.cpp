@@ -34,7 +34,7 @@ bool CScoreCardNumberField::isMarked() const
 void CScoreCardNumberField::mark(bool marked)
 {
     m_Marked = marked;
-    emit markedChanged();
+//    emit markedChanged();
 }
 
 //============================================================================
@@ -47,7 +47,7 @@ int CScoreCardNumberField::number() const
 void CScoreCardNumberField::setNumber(int number)
 {
     m_Number = number;
-    emit numberChanged();
+//    emit numberChanged();
 }
 
 CScoreCardNumberField::eFieldType CScoreCardNumberField::fieldType() const
@@ -58,5 +58,5 @@ CScoreCardNumberField::eFieldType CScoreCardNumberField::fieldType() const
 void CScoreCardNumberField::setFieldType(const eFieldType& fieldType)
 {
     m_FieldType = fieldType;
-    emit fieldTypeChanged();
+//    emit fieldTypeChanged();
 }

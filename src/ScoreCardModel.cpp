@@ -1,14 +1,14 @@
 //============================================================================
-/// \file   ScoreCard.cpp
+/// \file   ScoreCardModel.cpp
 /// \author Florian Meinicke <florian.meinicke@t-online.de>
 /// \date   13.09.2019
-/// \brief  Implementation of the CScoreCard class.
+/// \brief  Implementation of the CScoreCardModel class.
 //============================================================================
 
 //============================================================================
 //                                   INCLUDES
 //============================================================================
-#include "ScoreCard.h"
+#include "ScoreCardModel.h"
 
 #include "ScoreCardNumberField.h"
 
@@ -19,14 +19,50 @@
 using namespace std;
 
 //============================================================================
-CScoreCard::CScoreCard()
+CScoreCardModel::CScoreCardModel(QObject* parent) :
+    QAbstractListModel(parent),
+    m_ScoreCard(makeRandomScoreCard())
 {
 }
 
 //============================================================================
-QList<QObject*> CScoreCard::makeRandomScoreCard()
+QVariant CScoreCardModel::data(const QModelIndex& index, int role) const
 {
-    QList<QObject*> ScoreCard;
+    switch (role)
+    {
+    case NumberRole:
+        return m_ScoreCard[index.row()]->number();
+    case FieldTypeRole:
+        return m_ScoreCard[index.row()]->fieldType();
+    case MarkedRole:
+        return m_ScoreCard[index.row()]->isMarked();
+    default:
+        qWarning() << "Unknown role" << role << "for CScoreCardModel::data";
+        return QVariant();
+    }
+}
+
+//============================================================================
+int CScoreCardModel::rowCount(const QModelIndex& /*parent*/) const
+{
+    return m_NumFields;
+}
+
+//============================================================================
+QHash<int, QByteArray> CScoreCardModel::roleNames() const
+{
+    QHash<int, QByteArray> Roles;
+    Roles[NumberRole] = "number";
+    Roles[FieldTypeRole] = "fieldType";
+    Roles[MarkedRole] = "marked";
+    return Roles;
+}
+
+
+//============================================================================
+QList<CScoreCardNumberField*> CScoreCardModel::makeRandomScoreCard()
+{
+    QList<CScoreCardNumberField*> ScoreCard;
 
     // for each column there are 15 different number to pick from randomly
     constexpr auto MAX_COL_NUMBER_COUNT = 15;

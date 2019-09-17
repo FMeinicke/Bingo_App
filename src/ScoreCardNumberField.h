@@ -19,11 +19,6 @@
 class CScoreCardNumberField : public QObject
 {
     Q_OBJECT
-
-    Q_PROPERTY(int number READ number WRITE setNumber NOTIFY numberChanged)
-    Q_PROPERTY(bool marked READ isMarked WRITE mark NOTIFY markedChanged)
-    Q_PROPERTY(eFieldType fieldType READ fieldType WRITE setFieldType NOTIFY fieldTypeChanged)
-
 public:
     /**
      * @brief The FieldType enum specifies the two different types of fields on
@@ -32,9 +27,9 @@ public:
     enum eFieldType
     {
         FREE_SPACE, ///< the free space in the denter of the scorecard
-        NORMAL_SPACE, ///< ay other field on the scorecard
+        NORMAL_SPACE, ///< any other field on the scorecard
     };
-    Q_ENUM(eFieldType);
+    Q_ENUM(eFieldType); ///< make Qt aware of this enum to use it in QML as well
 
     /**
      * @brief Construct a new CScoreCardNumber initialized with @a number,
@@ -80,20 +75,6 @@ public:
     void setFieldType(const eFieldType& fieldType);
 
 signals:
-    /**
-     * @brief This field is emitted every time the number of the field changed.
-     */
-    void numberChanged();
-
-    /**
-     * @brief This signal is mitted every time the field is marked or cleared.
-     */
-    void markedChanged();
-
-    /**
-     * @brief This signal is mitted every time the field is marked or cleared.
-     */
-    void fieldTypeChanged();
 
 public slots:
 
