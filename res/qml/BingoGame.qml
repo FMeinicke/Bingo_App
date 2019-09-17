@@ -9,6 +9,7 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.5
 import QtQuick.Window 2.3
+import QtQuick.Dialogs 1.2
 
 Page {
   id: root
@@ -68,13 +69,21 @@ Page {
     anchors.left: parent.left
     anchors.leftMargin: root.offset / 3
 
-    onClicked: {
-      confirmDialog.open()
-      console.log(confirmDialog.clickedButton)
-      //      if (confirmDialog.clickedButton) {
-      //        scoreCardModel.newCard()
-      //      }
+    MessageDialog {
+      id: confirmNewCardsDialog
+      title: qsTr("Get new cards")
+      text: qsTr("Do you really want to get new cards?")
+      informativeText: qsTr("You will lose all your current cards!")
+      standardButtons: StandardButton.Yes | StandardButton.No
+
+      onButtonClicked: {
+        if (clickedButton === StandardButton.Yes) {
+          scoreCardModel.newCard()
+        }
+      }
     }
+
+    onClicked: confirmNewCardsDialog.open()
   }
 
   Button {
@@ -87,6 +96,20 @@ Page {
     anchors.right: parent.right
     anchors.rightMargin: root.offset / 3
 
-    onClicked: scoreCardModel.clearCard()
+    MessageDialog {
+      id: confirmResetCardsDialog
+      title: qsTr("Clear all cards")
+      text: qsTr("Do you really clear all your cards?")
+      informativeText: qsTr("You will lose all your marks on every card!")
+      standardButtons: StandardButton.Yes | StandardButton.No
+
+      onButtonClicked: {
+        if (clickedButton === StandardButton.Yes) {
+          scoreCardModel.clearCard()
+        }
+      }
+    }
+
+    onClicked: confirmResetCardsDialog.open()
   }
 }
