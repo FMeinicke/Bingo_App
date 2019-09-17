@@ -78,6 +78,25 @@ void CScoreCardModel::markNumber(const QString& Number)
 
 
 //============================================================================
+void CScoreCardModel::clearCard()
+{
+    for (auto& el : m_ScoreCard)
+    {
+        el.mark(false);
+    }
+    emit dataChanged(createIndex(0, 0), createIndex(m_NumFields, 0), {MarkedRole});
+}
+
+//============================================================================
+void CScoreCardModel::newCard()
+{
+    m_ScoreCard.clear();
+    m_ScoreCard = makeRandomScoreCard();
+    emit dataChanged(createIndex(0, 0), createIndex(m_NumFields, 0));
+}
+
+
+//============================================================================
 QList<CScoreCardNumberField> CScoreCardModel::makeRandomScoreCard()
 {
     QList<CScoreCardNumberField> ScoreCard;

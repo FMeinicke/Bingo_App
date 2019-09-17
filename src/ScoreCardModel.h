@@ -59,6 +59,16 @@ public:
      */
     Q_INVOKABLE void markNumber(const QString& Number);
 
+    /**
+     * @brief Remove all markers from the scorecard.
+     */
+    Q_INVOKABLE void clearCard();
+
+    /**
+     * @brief Makes a new random scorecard.
+     */
+    Q_INVOKABLE void newCard();
+
 private:
     /**
      * @brief Creates a scorecard with randomly filled number fields.

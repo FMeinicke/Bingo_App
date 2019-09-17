@@ -16,13 +16,13 @@ Page {
   height: Screen.height
   focusPolicy: Qt.StrongFocus
 
-  property int offset: -75
+  property int offset: 75
 
   BingoCardForm {
     id: scoreCard
     scale: 0.6
     anchors.top: parent.top
-    anchors.topMargin: root.offset
+    anchors.topMargin: -root.offset
     anchors.horizontalCenter: parent.horizontalCenter
   }
 
@@ -44,7 +44,7 @@ Page {
     horizontalAlignment: Text.AlignHCenter
 
     anchors.top: scoreCard.bottom
-    anchors.topMargin: root.offset
+    anchors.topMargin: -root.offset
     anchors.horizontalCenter: parent.horizontalCenter
 
     cursorVisible: false
@@ -53,7 +53,40 @@ Page {
 
     onEditingFinished: {
       // strip off the first character (i.e. the letter)
+      // TODO: don't discard the letter
       scoreCardModel.markNumber(displayText.substr(1))
     }
+  }
+
+  Button {
+    id: buttonNewCard
+    text: qsTr("New Cards")
+    font.pointSize: 14
+
+    anchors.top: scoreCard.bottom
+    anchors.topMargin: -root.offset
+    anchors.left: parent.left
+    anchors.leftMargin: root.offset / 3
+
+    onClicked: {
+      confirmDialog.open()
+      console.log(confirmDialog.clickedButton)
+      //      if (confirmDialog.clickedButton) {
+      //        scoreCardModel.newCard()
+      //      }
+    }
+  }
+
+  Button {
+    id: buttonResetCard
+    text: qsTr("Reset Cards")
+    font.pointSize: 14
+
+    anchors.top: scoreCard.bottom
+    anchors.topMargin: -root.offset
+    anchors.right: parent.right
+    anchors.rightMargin: root.offset / 3
+
+    onClicked: scoreCardModel.clearCard()
   }
 }
