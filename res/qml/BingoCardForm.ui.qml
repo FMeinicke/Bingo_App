@@ -58,7 +58,8 @@ Item {
       Rectangle {
         id: marking
 
-        visible: marked
+        // center field is a free field -> marked by default but shouldn't be displayed
+        visible: fieldType === ScoreCardNumberFieldType.FREE_SPACE ? false : marked
 
         anchors.fill: parent
         scale: 0.9

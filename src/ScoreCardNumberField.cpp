@@ -15,7 +15,7 @@ CScoreCardNumberField::CScoreCardNumberField(int number, eFieldType type, QObjec
     QObject(parent),
     m_Number{number},
     m_FieldType{type},
-    m_Marked{false}
+    m_Marked{type == FREE_SPACE} ///< free space (i.e. center field) is marked by default
 {
 }
 
