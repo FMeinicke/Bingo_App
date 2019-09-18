@@ -55,9 +55,17 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     /**
-     * @brief Mark the given @a Number on the scorecard.
+     * @brief Get the error message of the error that occurred latest.
      */
-    Q_INVOKABLE void markNumber(const QString& Number);
+    Q_INVOKABLE QString readLastError() const;
+
+    /**
+     * @brief Mark the given @a Number on the scorecard if it is a valid bingo number.
+     * @returns true, if the @a Number is valid
+     * @returns false, if the @a Number is not valid. Get the exact error message
+     * by calling @b readLastError()
+     */
+    Q_INVOKABLE bool markValidNumber(const QString& Number);
 
     /**
      * @brief Remove all markers from the scorecard.
@@ -68,6 +76,7 @@ public:
      * @brief Makes a new random scorecard.
      */
     Q_INVOKABLE void newCard();
+
 
 protected:
     enum eBingoLetter
@@ -113,6 +122,7 @@ private:
     static constexpr int m_MaxColNumberCount{15};
 
     QList<CScoreCardNumberField> m_ScoreCard;
+    QString m_LastError;
 };
 
 #endif // CSCORECARDMODEL_H

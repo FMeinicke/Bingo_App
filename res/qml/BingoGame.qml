@@ -43,6 +43,14 @@ Page {
     anchors.top: parent.top
     anchors.topMargin: -root.offset
     anchors.horizontalCenter: parent.horizontalCenter
+
+    ToolTip {
+      id: errorMsg
+      anchors.centerIn: parent
+      visible: false
+      timeout: 3000
+      delay: 500
+    }
   }
 
   TextField {
@@ -60,6 +68,7 @@ Page {
     font.bold: true
     font.pointSize: 24
     font.capitalization: Font.AllUppercase
+    inputMethodHints: Qt.ImhUppercaseOnly
     horizontalAlignment: Text.AlignHCenter
 
     anchors.top: scoreCard.bottom
@@ -68,9 +77,11 @@ Page {
 
     cursorVisible: false
 
-    onPressed: clear()
-
-    onEditingFinished: scoreCardModel.markNumber(displayText)
+    onEditingFinished: {
+      if (!scoreCardModel.markValidNumber(displayText)) {
+        errorMsg.show(qsTr(scoreCardModel.readLastError()))
+      }
+    }
   }
 
   Button {

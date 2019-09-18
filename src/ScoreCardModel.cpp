@@ -19,7 +19,8 @@ using namespace std;
 //============================================================================
 CScoreCardModel::CScoreCardModel(QObject* parent) :
     QAbstractListModel(parent),
-    m_ScoreCard(makeRandomScoreCard())
+    m_ScoreCard(makeRandomScoreCard()),
+    m_LastError("No error")
 {
 }
 
@@ -57,13 +58,20 @@ QHash<int, QByteArray> CScoreCardModel::roleNames() const
 }
 
 //============================================================================
-void CScoreCardModel::markNumber(const QString& Number)
+QString CScoreCardModel::readLastError() const
+{
+    return m_LastError;
+}
+
+//============================================================================
+bool CScoreCardModel::markValidNumber(const QString& Number)
 {
     int IntNumber;
     if (!getValidBingoNumber(Number, IntNumber))
     {
         qWarning() << "The given number" << Number << "is not a valid Bingo number!";
-        return;
+        m_LastError = "Invalid Bingo number!";
+        return false;
     }
 
     const auto FieldIndex = m_ScoreCard.indexOf(CScoreCardNumberField(IntNumber));
@@ -73,6 +81,8 @@ void CScoreCardModel::markNumber(const QString& Number)
         const auto FieldModelIndex = createIndex(FieldIndex, 0);
         emit dataChanged(FieldModelIndex, FieldModelIndex, {MarkedRole});
     }
+    m_LastError = "";
+    return true;
 }
 
 
