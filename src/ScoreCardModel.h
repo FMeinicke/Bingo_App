@@ -22,6 +22,12 @@ class CScoreCardModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
+    /**
+     * @brief The eScoreCardNumberFieldRoles enum defines the different roles
+     * of this model. Each role represents an attribute of the underlying data
+     * (i.e. attributes of the CScoreCardNubmerField class in this case) that
+     * should be accessible from QML.
+     */
     enum eScoreCardNumberFieldRoles
     {
         NumberRole = Qt::UserRole + 1,
@@ -77,8 +83,12 @@ public:
      */
     Q_INVOKABLE void newCard();
 
-
 protected:
+    /**
+     * @brief The eBingoLetter enum defines the column IDs of the letters
+     * 'B', 'I', 'N', 'G' and 'O' on a bingo scorecard. That means the first column
+     * on a scorecard has the letter 'B' and therefore ID `0' (or @a LETTER_B).
+     */
     enum eBingoLetter
     {
         LETTER_B,
