@@ -69,15 +69,48 @@ public:
      */
     Q_INVOKABLE void newCard();
 
-private:
+protected:
+    enum eBingoLetter
+    {
+        LETTER_B,
+        LETTER_I,
+        LETTER_N,
+        LETTER_G,
+        LETTER_O,
+        LETTER_INVALID = -1,
+    };
+
+
     /**
      * @brief Creates a scorecard with randomly filled number fields.
      */
     static QList<CScoreCardNumberField> makeRandomScoreCard();
 
+    /**
+     * @brief Converts the given @a StringNumber from a string to an integer and
+     * returns it in @a IntNumber. During conversion the first letter gets
+     * stripped off and therefore @a IntNumber contains just the integer after
+     * the letter (e.g. for the given string 'B13' @a IntNumber would contain `13').
+     * @returns true, if the number is valid and the conversion was succesfull.
+     * @a IntNumber contains the converted number.
+     * @returns false, if the number is not valid and the conversion was not
+     *  succesfull.@a IntNumber contains the value `0'.
+     */
+    static bool getValidBingoNumber(const QString& StringNumber, int& IntNumber);
 
+    /**
+     * @brief Converts the given @a Letter to an eBingoLetter that indicates the
+     * column ID for the @a Letter (i.e. letter 'B' corresponds to ID 0,
+     * 'I' to ID 1, and so on). If the letter is not one of 'B', 'I', 'N', 'G' or 'O'
+     * @a LETTER_INVALID is returned.
+     */
+    static eBingoLetter bingoLetterToColumnId(const QChar& Letter);
+
+private:
     static constexpr int m_NumFields{25};
     static constexpr int m_NumColumns{5};
+    // for each column there are 15 different numbers to pick from randomly
+    static constexpr int m_MaxColNumberCount{15};
 
     QList<CScoreCardNumberField> m_ScoreCard;
 };

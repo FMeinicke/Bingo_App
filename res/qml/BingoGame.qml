@@ -26,7 +26,6 @@ Page {
 
     onButtonClicked: {
       if (clickedButton === StandardButton.Yes) {
-        console.log("want to leave")
         stackView.pop()
       }
     }
@@ -57,7 +56,7 @@ Page {
     //      anchors.horizontalCenterOffset: -115
     //      anchors.verticalCenterOffset: -3
     //    }
-    placeholderText: "B17"
+    placeholderText: "B13"
     font.bold: true
     font.pointSize: 24
     font.capitalization: Font.AllUppercase
@@ -71,11 +70,7 @@ Page {
 
     onPressed: clear()
 
-    onEditingFinished: {
-      // strip off the first character (i.e. the letter)
-      // TODO: don't discard the letter
-      scoreCardModel.markNumber(displayText.substr(1))
-    }
+    onEditingFinished: scoreCardModel.markNumber(displayText)
   }
 
   Button {
@@ -98,6 +93,7 @@ Page {
       onButtonClicked: {
         if (clickedButton === StandardButton.Yes) {
           scoreCardModel.newCard()
+          numberInput.clear()
         }
       }
     }
@@ -125,6 +121,7 @@ Page {
       onButtonClicked: {
         if (clickedButton === StandardButton.Yes) {
           scoreCardModel.clearCard()
+          numberInput.clear()
         }
       }
     }
