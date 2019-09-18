@@ -15,7 +15,8 @@ CScoreCardNumberField::CScoreCardNumberField(int number, eFieldType type, QObjec
     QObject(parent),
     m_Number{number},
     m_FieldType{type},
-    m_Marked{type == FREE_SPACE} ///< free space (i.e. center field) is marked by default
+    m_Marked{type == FREE_SPACE}, ///< free space (i.e. center field) is marked by default
+    m_PartOfBingo{false}
 {
 }
 
@@ -30,7 +31,8 @@ CScoreCardNumberField::CScoreCardNumberField(const CScoreCardNumberField& rhs) :
     QObject(rhs.parent()),
     m_Number{rhs.m_Number},
     m_FieldType{rhs.m_FieldType},
-    m_Marked{rhs.m_Marked}
+    m_Marked{rhs.m_Marked},
+    m_PartOfBingo{rhs.m_PartOfBingo}
 {
 }
 
@@ -39,7 +41,8 @@ CScoreCardNumberField::CScoreCardNumberField(CScoreCardNumberField&& rhs) noexce
     QObject(rhs.parent()),
     m_Number{rhs.m_Number},
     m_FieldType{rhs.m_FieldType},
-    m_Marked{rhs.m_Marked}
+    m_Marked{rhs.m_Marked},
+    m_PartOfBingo{rhs.m_PartOfBingo}
 {
 }
 
@@ -49,6 +52,7 @@ CScoreCardNumberField& CScoreCardNumberField::operator=(const CScoreCardNumberFi
     m_Number = rhs.m_Number;
     m_FieldType = rhs.m_FieldType;
     m_Marked = rhs.m_Marked;
+    m_PartOfBingo = rhs.m_PartOfBingo;
     return *this;
 }
 
@@ -58,6 +62,7 @@ CScoreCardNumberField& CScoreCardNumberField::operator=(CScoreCardNumberField&& 
     m_Number = rhs.m_Number;
     m_FieldType = rhs.m_FieldType;
     m_Marked = rhs.m_Marked;
+    m_PartOfBingo = rhs.m_PartOfBingo;
     return *this;
 }
 
@@ -85,14 +90,28 @@ void CScoreCardNumberField::setNumber(int number)
     m_Number = number;
 }
 
+//============================================================================
 CScoreCardNumberField::eFieldType CScoreCardNumberField::fieldType() const
 {
     return m_FieldType;
 }
 
+//============================================================================
 void CScoreCardNumberField::setFieldType(const eFieldType& fieldType)
 {
     m_FieldType = fieldType;
+}
+
+//============================================================================
+bool CScoreCardNumberField::isPartOfBingo() const
+{
+    return m_PartOfBingo;
+}
+
+//============================================================================
+void CScoreCardNumberField::setPartOfBingo(bool Bingo)
+{
+    m_PartOfBingo = Bingo;
 }
 
 

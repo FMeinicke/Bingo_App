@@ -33,6 +33,7 @@ public:
         NumberRole = Qt::UserRole + 1,
         FieldTypeRole,
         MarkedRole,
+        PartOfBingoRole,
     };
 
     /**
@@ -72,6 +73,11 @@ public:
      * by calling @b readLastError()
      */
     Q_INVOKABLE bool markValidNumber(const QString& Number);
+
+    /**
+     * @brief Checks if there is a bingo on this scorecard.
+     */
+    Q_INVOKABLE void checkForBingo();
 
     /**
      * @brief Remove all markers from the scorecard.
@@ -124,6 +130,8 @@ protected:
      * @a LETTER_INVALID is returned.
      */
     static eBingoLetter bingoLetterToColumnId(const QChar& Letter);
+
+
 
 private:
     static constexpr int m_NumFields{25};

@@ -77,10 +77,14 @@ Page {
 
     cursorVisible: false
 
+    onPressed: clear()
+
     onEditingFinished: {
       if (!scoreCardModel.markValidNumber(displayText)) {
         errorMsg.show(qsTr(scoreCardModel.readLastError()))
+        return
       }
+      scoreCardModel.checkForBingo()
     }
   }
 

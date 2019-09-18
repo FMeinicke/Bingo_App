@@ -1,5 +1,5 @@
 //============================================================================
-/// \file   BingoCardForm.ui.qml
+/// \file   BingoCardForm.qml
 /// \author Florian Meinicke <florian.meinicke@t-online.de>
 /// \date   13.09.2019
 /// \brief  A form displaying one bingo score card
@@ -65,8 +65,29 @@ Item {
         scale: 0.9
 
         color: Material.primary
+
         opacity: 0.5
         radius: 50
+
+        SequentialAnimation on color {
+          id: bingoAnimation
+          loops: 5
+
+          running: partOfBingo
+          property color flashingColor: Material.color(Material.Red)
+          property int duration: 450
+
+          ColorAnimation {
+            from: marking.color
+            to: bingoAnimation.flashingColor
+            duration: bingoAnimation.duration
+          }
+          ColorAnimation {
+            from: bingoAnimation.flashingColor
+            to: marking.color
+            duration: bingoAnimation.duration
+          }
+        }
       }
 
       InnerShadow {

@@ -35,6 +35,8 @@ QVariant CScoreCardModel::data(const QModelIndex& index, int role) const
         return m_ScoreCard[index.row()].fieldType();
     case MarkedRole:
         return m_ScoreCard[index.row()].isMarked();
+    case PartOfBingoRole:
+        return m_ScoreCard[index.row()].isPartOfBingo();
     default:
         qWarning() << "Unknown role" << role << "for CScoreCardModel::data";
         return QVariant();
@@ -54,6 +56,7 @@ QHash<int, QByteArray> CScoreCardModel::roleNames() const
     Roles[NumberRole] = "number";
     Roles[FieldTypeRole] = "fieldType";
     Roles[MarkedRole] = "marked";
+    Roles[PartOfBingoRole] = "partOfBingo";
     return Roles;
 }
 
@@ -83,6 +86,45 @@ bool CScoreCardModel::markValidNumber(const QString& Number)
     }
     m_LastError = "";
     return true;
+}
+
+//============================================================================
+void CScoreCardModel::checkForBingo()
+{
+    vector<int> PossibleBingoIndices;
+
+    // check horizontally
+    for (int i = 0; i < m_NumFields; ++i)
+    {
+        if (m_ScoreCard[i].isMarked())
+        {
+            PossibleBingoIndices.push_back(i);
+            const auto LastIdInRow = i - (i % m_NumColumns) + m_NumColumns;
+            if (i == LastIdInRow)
+            {
+                // found a bingo!
+                break;
+            }
+        }
+        else
+        {
+            PossibleBingoIndices.clear();
+            // set i to the start index of the next row since this row cannot have a bingo
+            i = i - (i % m_NumColumns) + m_NumColumns;
+        }
+    }
+
+    for (const auto Idx : PossibleBingoIndices)
+    {
+        m_ScoreCard[Idx].setPartOfBingo();
+    }
+
+    if (!PossibleBingoIndices.empty())
+    {
+        emit dataChanged(createIndex(PossibleBingoIndices.front(), 0),
+                         createIndex(PossibleBingoIndices.back(), 0),
+                         {PartOfBingoRole});
+    }
 }
 
 

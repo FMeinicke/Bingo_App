@@ -101,7 +101,17 @@ public:
     void setFieldType(const eFieldType& fieldType);
 
     /**
-     * @brief Returns if the field @a rhs is equal to this number field.
+     * @brief Returns whether this number field is part of a bingo row/column/diagonal
+     */
+    bool isPartOfBingo() const;
+
+    /**
+     * @brief Set whether this number field is part of a bingo row/column/diagonal
+     */
+    void setPartOfBingo(bool partOfBingo = true);
+
+    /**
+     * @brief Returns if the field @a rhs is equal to this number field
      */
     bool operator==(const CScoreCardNumberField& rhs) const;
 
@@ -110,9 +120,10 @@ signals:
 public slots:
 
 private:
-    int m_Number{};
-    eFieldType m_FieldType{};
-    bool m_Marked{};
+    int m_Number{}; ///< the field's number (from 1 to 75)
+    eFieldType m_FieldType{}; ///< the field type (either FREE_SPAC or NORMAL_SPACE)
+    bool m_Marked{}; ///< a called-out number gets marked
+    bool m_PartOfBingo{}; ///< true if the field is part of a bingo row/column/diagonal
 };
 
 #endif // CSCORECARDNUMBERFIELD_H
