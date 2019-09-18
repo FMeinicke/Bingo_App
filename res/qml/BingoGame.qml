@@ -17,7 +17,26 @@ Page {
   height: Screen.height
   focusPolicy: Qt.StrongFocus
 
+  MessageDialog {
+    id: confirmLeaveDialog
+    title: qsTr("Leave Game")
+    text: qsTr("Do you really want to leave the game?")
+    informativeText: qsTr("You will lose all your current cards and marks!")
+    standardButtons: StandardButton.Yes | StandardButton.No
+
+    onButtonClicked: {
+      if (clickedButton === StandardButton.Yes) {
+        console.log("want to leave")
+        stackView.pop()
+      }
+    }
+  }
+
   property int offset: 75
+
+  Component.onCompleted: scoreCardModel.newCard()
+
+  Keys.onBackPressed: confirmLeaveDialog.open()
 
   BingoCardForm {
     id: scoreCard
