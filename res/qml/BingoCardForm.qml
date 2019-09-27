@@ -26,7 +26,7 @@ Item {
 
     fillMode: Image.PreserveAspectFit
 
-    // image taken from https://www.wikihow.com/Sample/Bingo-Card
+    // image taken from https://www.wikihow.com/Sample/Blank-Bingo-Card
     source: "qrc:/images/score_card.png"
     anchors.fill: parent
   }
@@ -47,26 +47,38 @@ Item {
       width: gridView.cellWidth
       height: gridView.cellHeight
 
-      property color markingColor: Material.primary
+      property color bingoColor: Material.color(Material.Red)
+      property color markingColor: partOfBingo ? bingoColor : Material.primary
 
-      SequentialAnimation on markingColor {
+      Behavior on markingColor {
         id: bingoAnimation
-        loops: 5
 
-        running: partOfBingo
-
-        property color flashingColor: Material.color(Material.Red)
         property int duration: 450
 
-        ColorAnimation {
-          from: markingColor
-          to: bingoAnimation.flashingColor
-          duration: bingoAnimation.duration
-        }
-        ColorAnimation {
-          from: bingoAnimation.flashingColor
-          to: markingColor
-          duration: bingoAnimation.duration
+        SequentialAnimation {
+          loops: 1
+
+          running: partOfBingo
+
+          ColorAnimation {
+            to: bingoColor
+            duration: bingoAnimation.duration
+          }
+
+          SequentialAnimation {
+            loops: 3
+
+            ColorAnimation {
+              from: bingoColor
+              to: markingColor
+              duration: bingoAnimation.duration
+            }
+            ColorAnimation {
+              from: markingColor
+              to: bingoColor
+              duration: bingoAnimation.duration
+            }
+          }
         }
       }
 

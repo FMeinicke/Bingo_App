@@ -12,6 +12,7 @@
 
 #include <QDebug>
 
+#include <cmath>
 #include <unordered_map>
 
 using namespace std;
@@ -100,7 +101,6 @@ void CScoreCardModel::checkForBingo()
         if (m_ScoreCard[i].isMarked())
         {
             PossibleBingoIndices.push_back(i);
-            qDebug() << "possible bingo at #" << i;
             if (i == LastIdInRow)
             {
                 // found a bingo!
@@ -116,8 +116,6 @@ void CScoreCardModel::checkForBingo()
             i = LastIdInRow;
         }
     }
-
-    qDebug() << "PossibleBingoIndices:" << PossibleBingoIndices;
 
     for (const auto Idx : PossibleBingoIndices)
     {
@@ -166,7 +164,7 @@ QList<CScoreCardNumberField> CScoreCardModel::makeRandomScoreCard()
     unordered_map<int, int> TakenNumbers(m_NumFields);
 
     /**
-     * @brief Calculates a unique random number between @arg lower and @arg upper.
+     * @brief Calculates a unique random number between @a lower and @a upper.
      */
     auto uniqueRandBetween = [&TakenNumbers] (int lower, int upper) -> int
     {
@@ -191,7 +189,6 @@ QList<CScoreCardNumberField> CScoreCardModel::makeRandomScoreCard()
         const auto Type = i == CenterFieldId ? CScoreCardNumberField::FREE_SPACE :
                                                CScoreCardNumberField::NORMAL_SPACE;
         ScoreCard.append(CScoreCardNumberField(Num, Type));
-        qDebug() << "Field #" << i << "is" << (ScoreCard.back().isMarked() ? "" : "not") << "marked";
     }
 
     return ScoreCard;
