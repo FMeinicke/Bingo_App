@@ -46,6 +46,30 @@ Item {
       id: wrapper
       width: gridView.cellWidth
       height: gridView.cellHeight
+
+      property color markingColor: Material.primary
+
+      SequentialAnimation on markingColor {
+        id: bingoAnimation
+        loops: 5
+
+        running: partOfBingo
+
+        property color flashingColor: Material.color(Material.Red)
+        property int duration: 450
+
+        ColorAnimation {
+          from: markingColor
+          to: bingoAnimation.flashingColor
+          duration: bingoAnimation.duration
+        }
+        ColorAnimation {
+          from: bingoAnimation.flashingColor
+          to: markingColor
+          duration: bingoAnimation.duration
+        }
+      }
+
       Text {
         // center field is a free field -> it's number shouldn't be displayed
         text: fieldType === ScoreCardNumberFieldType.FREE_SPACE ? "" : number
@@ -64,30 +88,10 @@ Item {
         anchors.fill: parent
         scale: 0.9
 
-        color: Material.primary
+        color: markingColor
 
         opacity: 0.5
         radius: 50
-
-        SequentialAnimation on color {
-          id: bingoAnimation
-          loops: 5
-
-          running: partOfBingo
-          property color flashingColor: Material.color(Material.Red)
-          property int duration: 450
-
-          ColorAnimation {
-            from: marking.color
-            to: bingoAnimation.flashingColor
-            duration: bingoAnimation.duration
-          }
-          ColorAnimation {
-            from: bingoAnimation.flashingColor
-            to: marking.color
-            duration: bingoAnimation.duration
-          }
-        }
       }
 
       InnerShadow {
