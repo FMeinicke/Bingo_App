@@ -26,7 +26,7 @@ public:
      */
     enum eFieldType
     {
-        FREE_SPACE, ///< the free space in the denter of the scorecard
+        FREE_SPACE, ///< the free space in the center of the scorecard
         NORMAL_SPACE, ///< any other field on the scorecard
     };
     Q_ENUM(eFieldType); ///< make Qt aware of this enum to use it in QML as well
@@ -121,7 +121,7 @@ public slots:
 
 private:
     int m_Number{}; ///< the field's number (from 1 to 75)
-    eFieldType m_FieldType{}; ///< the field type (either FREE_SPAC or NORMAL_SPACE)
+    eFieldType m_FieldType{}; ///< the field type (either FREE_SPACE or NORMAL_SPACE)
     bool m_Marked{}; ///< a called-out number gets marked
     bool m_PartOfBingo{}; ///< true if the field is part of a bingo row/column/diagonal
 };

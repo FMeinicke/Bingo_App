@@ -96,23 +96,28 @@ void CScoreCardModel::checkForBingo()
     // check horizontally
     for (int i = 0; i < m_NumFields; ++i)
     {
+        const auto LastIdInRow = i - (i % m_NumColumns) + m_NumColumns - 1;
         if (m_ScoreCard[i].isMarked())
         {
             PossibleBingoIndices.push_back(i);
-            const auto LastIdInRow = i - (i % m_NumColumns) + m_NumColumns;
+            qDebug() << "possible bingo at #" << i;
             if (i == LastIdInRow)
             {
                 // found a bingo!
+                qDebug() << "Found a bingo!";
                 break;
             }
         }
         else
         {
             PossibleBingoIndices.clear();
-            // set i to the start index of the next row since this row cannot have a bingo
-            i = i - (i % m_NumColumns) + m_NumColumns;
+            // set `i' to the last index of the this row since this row cannot have a bingo
+            // `i' will be increased by the loop thus setting it to the next row's starting index
+            i = LastIdInRow;
         }
     }
+
+    qDebug() << "PossibleBingoIndices:" << PossibleBingoIndices;
 
     for (const auto Idx : PossibleBingoIndices)
     {
@@ -133,7 +138,10 @@ void CScoreCardModel::clearCard()
 {
     for (auto& el : m_ScoreCard)
     {
-        el.mark(false);
+        if (el.fieldType() == CScoreCardNumberField::NORMAL_SPACE)
+        {
+            el.mark(false);
+        }
     }
     emit dataChanged(createIndex(0, 0), createIndex(m_NumFields, 0), {MarkedRole});
 }
@@ -173,14 +181,17 @@ QList<CScoreCardNumberField> CScoreCardModel::makeRandomScoreCard()
         return RandomNumber;
     };
 
+    const auto CenterFieldId = static_cast<int>(floor(m_NumFields / 2));
     for (int i = 0; i < m_NumFields; ++i)
     {
         const auto ColumnId = i % m_NumColumns + 1;
         const auto Num = uniqueRandBetween(m_MaxColNumberCount * (ColumnId - 1) + 1,
                                            m_MaxColNumberCount * ColumnId);
-        const auto Type = i == 12 ? CScoreCardNumberField::FREE_SPACE :
-                                    CScoreCardNumberField::NORMAL_SPACE;
+        // center field is a free field
+        const auto Type = i == CenterFieldId ? CScoreCardNumberField::FREE_SPACE :
+                                               CScoreCardNumberField::NORMAL_SPACE;
         ScoreCard.append(CScoreCardNumberField(Num, Type));
+        qDebug() << "Field #" << i << "is" << (ScoreCard.back().isMarked() ? "" : "not") << "marked";
     }
 
     return ScoreCard;

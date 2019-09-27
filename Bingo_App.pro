@@ -30,7 +30,14 @@ RC_FILE += res/BingoApp.rc
 ICON = res/icon/bingo_app.jpg
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
-QML_IMPORT_PATH =
+android {
+    equals(ANDROID_TARGET_ARCH, x86) {
+        QML_IMPORT_PATH += C:/Qt/5.12.3/android_x86/qml
+    }
+    equals(ANDROID_TARGET_ARCH, arm64-v8a) {
+        QML_IMPORT_PATH += C:/Qt/5.12.3/android_arm64_v8a/qml
+    }
+}
 
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 QML_DESIGNER_IMPORT_PATH =
