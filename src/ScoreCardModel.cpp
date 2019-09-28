@@ -139,9 +139,11 @@ void CScoreCardModel::clearCard()
         if (el.fieldType() == CScoreCardNumberField::NORMAL_SPACE)
         {
             el.mark(false);
+            el.setPartOfBingo(false);
         }
     }
-    emit dataChanged(createIndex(0, 0), createIndex(m_NumFields, 0), {MarkedRole});
+    emit dataChanged(createIndex(0, 0), createIndex(m_NumFields, 0),
+                     {MarkedRole, PartOfBingoRole});
 }
 
 //============================================================================
