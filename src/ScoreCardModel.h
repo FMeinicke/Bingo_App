@@ -22,6 +22,8 @@ class CScoreCardModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
+    Q_PROPERTY(bool hasBingo READ hasBingo NOTIFY hasBingoChanged)
+
     /**
      * @brief The eScoreCardNumberFieldRoles enum defines the different roles
      * of this model. Each role represents an attribute of the underlying data
@@ -62,6 +64,11 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     /**
+     * @brief Returns whether this scorecard has a bingo
+     */
+    bool hasBingo() const;
+
+    /**
      * @brief Get the error message of the error that occurred latest.
      */
     Q_INVOKABLE QString readLastError() const;
@@ -88,6 +95,12 @@ public:
      * @brief Makes a new random scorecard.
      */
     Q_INVOKABLE void newCard();
+
+signals:
+    /**
+     * @brief This signal is emitted whenever the scorecard has a bingo.
+     */
+    void hasBingoChanged();
 
 protected:
     /**
@@ -132,13 +145,21 @@ protected:
     static eBingoLetter bingoLetterToColumnId(const QChar& Letter);
 
 private:
+    /**
+     * @brief Sets the @b HasBingo property to @a hasBingo.
+     * Emits @b hasBingoChanged to notify observers.
+     */
+    void setHasBingo(bool hasBingo);
+
+
     static constexpr int m_NumFields{25};
     static constexpr int m_NumColumns{5};
     // for each column there are 15 different numbers to pick from randomly
     static constexpr int m_MaxColNumberCount{15};
 
     QList<CScoreCardNumberField> m_ScoreCard;
-    QString m_LastError;
+    QString m_LastError; ///< contains a description of the last occurred error
+    bool m_HasBingo{false}; ///< indicates whether the scorecard has a bingo
 };
 
 #endif // CSCORECARDMODEL_H

@@ -62,6 +62,12 @@ QHash<int, QByteArray> CScoreCardModel::roleNames() const
 }
 
 //============================================================================
+bool CScoreCardModel::hasBingo() const
+{
+    return m_HasBingo;
+}
+
+//============================================================================
 QString CScoreCardModel::readLastError() const
 {
     return m_LastError;
@@ -134,6 +140,8 @@ void CScoreCardModel::checkForBingo()
                          createIndex(PossibleBingoIndices.back(), 0),
                          {PartOfBingoRole});
     }
+
+    setHasBingo(!PossibleBingoIndices.empty());
 }
 
 
@@ -150,6 +158,8 @@ void CScoreCardModel::clearCard()
     }
     emit dataChanged(createIndex(0, 0), createIndex(m_NumFields, 0),
                      {MarkedRole, PartOfBingoRole});
+
+    setHasBingo(false);
 }
 
 //============================================================================
@@ -158,6 +168,8 @@ void CScoreCardModel::newCard()
     m_ScoreCard.clear();
     m_ScoreCard = makeRandomScoreCard();
     emit dataChanged(createIndex(0, 0), createIndex(m_NumFields, 0));
+
+    setHasBingo(false);
 }
 
 
@@ -238,4 +250,13 @@ CScoreCardModel::eBingoLetter CScoreCardModel::bingoLetterToColumnId(const QChar
         qWarning("The given bingo letter '%c' is not valid!", Letter.toLatin1());
         return LETTER_INVALID;
     }
+}
+
+
+//============================================================================
+void CScoreCardModel::setHasBingo(bool hasBingo)
+{
+
+    m_HasBingo = hasBingo;
+    emit hasBingoChanged();
 }

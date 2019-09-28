@@ -9,6 +9,7 @@
         <file>BingoCardForm.qml</file>
         <file>BingoGame.qml</file>
         <file>ConfigClassicGameForm.ui.qml</file>
+        <file>ScoreCardDelegate.qml</file>
     </qresource>
     <qresource prefix="/">
         <file>qtquickcontrols2.conf</file>

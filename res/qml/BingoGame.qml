@@ -3,7 +3,7 @@
 /// \author Florian Meinicke <florian.meinicke@t-online.de>
 /// \date   13.09.2019
 /// \brief  The main game page with all bingo score cards and a field to enter
-/// the drawn number
+/// the called-out number
 //============================================================================
 import QtQuick 2.12
 import QtQuick.Layouts 1.3
@@ -57,13 +57,6 @@ Page {
     id: numberInput
     width: height
 
-    //    Label {
-    //      text: qsTr("Drawn Number:")
-    //      anchors.verticalCenter: parent.verticalCenter
-    //      anchors.horizontalCenter: parent.horizontalCenter
-    //      anchors.horizontalCenterOffset: -115
-    //      anchors.verticalCenterOffset: -3
-    //    }
     placeholderText: "B13"
     font.bold: true
     font.pointSize: 24
@@ -88,6 +81,11 @@ Page {
     }
   }
 
+  function reset() {
+    scoreCard.state = ""
+    numberInput.clear()
+  }
+
   Button {
     id: buttonNewCard
     text: qsTr("New Cards")
@@ -108,7 +106,7 @@ Page {
       onButtonClicked: {
         if (clickedButton === StandardButton.Yes) {
           scoreCardModel.newCard()
-          numberInput.clear()
+          reset()
         }
       }
     }
@@ -136,7 +134,7 @@ Page {
       onButtonClicked: {
         if (clickedButton === StandardButton.Yes) {
           scoreCardModel.clearCard()
-          numberInput.clear()
+          reset()
         }
       }
     }
