@@ -131,8 +131,6 @@ protected:
      */
     static eBingoLetter bingoLetterToColumnId(const QChar& Letter);
 
-
-
 private:
     static constexpr int m_NumFields{25};
     static constexpr int m_NumColumns{5};

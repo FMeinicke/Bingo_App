@@ -129,7 +129,7 @@ Page {
     MessageDialog {
       id: confirmResetCardsDialog
       title: qsTr("Clear all cards")
-      text: qsTr("Do you really clear all your cards?")
+      text: qsTr("Do you really want to clear all your cards?")
       informativeText: qsTr("You will lose all your marks on every card!")
       standardButtons: StandardButton.Yes | StandardButton.No
 
