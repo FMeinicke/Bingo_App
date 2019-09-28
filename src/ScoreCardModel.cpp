@@ -70,6 +70,12 @@ QString CScoreCardModel::readLastError() const
 //============================================================================
 bool CScoreCardModel::markValidNumber(const QString& Number)
 {
+    if (Number.isEmpty())
+    {
+        // don't do anything with an empty input -> don't even show an error
+        return true;
+    }
+
     int IntNumber;
     if (!getValidBingoNumber(Number, IntNumber))
     {
