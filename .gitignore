@@ -71,3 +71,5 @@ Thumbs.db
 *.dll
 *.exe
 
+# Shadow build directory
+build/
