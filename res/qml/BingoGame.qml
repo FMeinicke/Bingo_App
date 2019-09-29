@@ -78,12 +78,8 @@ Page {
         return
       }
       scoreCardModel.checkForBingo()
+      clear()
     }
-  }
-
-  function reset() {
-    scoreCard.state = ""
-    numberInput.clear()
   }
 
   Button {
@@ -106,7 +102,7 @@ Page {
       onButtonClicked: {
         if (clickedButton === StandardButton.Yes) {
           scoreCardModel.newCard()
-          reset()
+          scoreCard.state = ""
         }
       }
     }
@@ -134,7 +130,7 @@ Page {
       onButtonClicked: {
         if (clickedButton === StandardButton.Yes) {
           scoreCardModel.clearCard()
-          reset()
+          scoreCard.state = ""
         }
       }
     }
