@@ -105,43 +105,88 @@ bool CScoreCardModel::markValidNumber(const QString& Number)
 void CScoreCardModel::checkForBingo()
 {
     vector<int> PossibleBingoIndices;
+    constexpr static auto NumRows = m_NumFields / m_NumColumns;
 
-    // check horizontally
-    for (int i = 0; i < m_NumFields; ++i)
+    /**
+     * @brief Checks for a possible bingo in horizontal direction.
+     * If a bingo is found, the function returns true and @b PossibleBingoIndices
+     * contains the corresponding indices of the number fields forming the bingo.
+     */
+    const auto checkHorizontally = [&]() -> bool
     {
-        const auto LastIdInRow = i - (i % m_NumColumns) + m_NumColumns - 1;
-        if (m_ScoreCard[i].isMarked())
+        for (int i = 0; i < NumRows; ++i)
         {
-            PossibleBingoIndices.push_back(i);
-            if (i == LastIdInRow)
+            const auto LastIdInRow = (i + 1) * m_NumColumns - 1;
+            for (int j = i * m_NumColumns; j <= LastIdInRow; ++j)
             {
-                // found a bingo!
+                if (m_ScoreCard[j].isMarked())
+                {
+                    PossibleBingoIndices.push_back(j);
+                }
+                else
+                {
+                    // this row cannot have a bingo anymore
+                    PossibleBingoIndices.clear();
+                    break;
+                }
+            }
+            if (PossibleBingoIndices.size() == m_NumColumns)
+            {
                 qDebug() << "Found a bingo!";
-                break;
+                return true;
             }
         }
-        else
+        return false;
+    };
+
+    /**
+     * @brief Checks for a possible bingo in vertical direction.
+     * If a bingo is found, the function returns true and @b PossibleBingoIndices
+     * contains the corresponding indices of the number fields forming the bingo.
+     */
+    const auto checkVertically = [&]() -> bool
+    {
+        for (int i = 0; i < m_NumColumns; ++i)
         {
-            PossibleBingoIndices.clear();
-            // set `i' to the last index of the this row since this row cannot have a bingo
-            // `i' will be increased by the loop thus setting it to the next row's starting index
-            i = LastIdInRow;
+            const auto LastIdInCol = (i % m_NumColumns) + m_NumFields - m_NumColumns;
+            for (int j = i; j <= LastIdInCol; j += m_NumColumns)
+            {
+                if (m_ScoreCard[j].isMarked())
+                {
+                    PossibleBingoIndices.push_back(j);
+                }
+                else
+                {
+                    // this column cannot have a bingo anymore
+                    PossibleBingoIndices.clear();
+                    break;
+                }
+            }
+            if (PossibleBingoIndices.size() == NumRows)
+            {
+                qDebug() << "Found a bingo!";
+                return true;
+            }
         }
-    }
+        return false;
+    };
 
-    for (const auto Idx : PossibleBingoIndices)
+    if (checkHorizontally() || checkVertically())
     {
-        m_ScoreCard[Idx].setPartOfBingo();
-    }
+        for (const auto Idx : PossibleBingoIndices)
+        {
+            m_ScoreCard[Idx].setPartOfBingo();
+        }
 
-    if (!PossibleBingoIndices.empty())
-    {
-        emit dataChanged(createIndex(PossibleBingoIndices.front(), 0),
-                         createIndex(PossibleBingoIndices.back(), 0),
-                         {PartOfBingoRole});
-    }
+        if (!PossibleBingoIndices.empty())
+        {
+            emit dataChanged(createIndex(PossibleBingoIndices.front(), 0),
+                             createIndex(PossibleBingoIndices.back(), 0),
+                             {PartOfBingoRole});
+        }
 
-    setHasBingo(!PossibleBingoIndices.empty());
+        setHasBingo(!PossibleBingoIndices.empty());
+    }
 }
 
 
