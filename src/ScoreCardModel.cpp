@@ -104,89 +104,66 @@ bool CScoreCardModel::markValidNumber(const QString& Number)
 //============================================================================
 void CScoreCardModel::checkForBingo()
 {
-    vector<int> PossibleBingoIndices;
-    constexpr static auto NumRows = m_NumFields / m_NumColumns;
-
-    /**
-     * @brief Checks for a possible bingo in horizontal direction.
-     * If a bingo is found, the function returns true and @b PossibleBingoIndices
-     * contains the corresponding indices of the number fields forming the bingo.
-     */
-    const auto checkHorizontally = [&]() -> bool
+    unordered_map<int, bool> PossibleBingoColumns;
+    unordered_map<int, bool> PossibleBingoRows;
+    for (int i = 0; i < m_NumColumns; ++i)
     {
-        for (int i = 0; i < NumRows; ++i)
-        {
-            const auto LastIdInRow = (i + 1) * m_NumColumns - 1;
-            for (int j = i * m_NumColumns; j <= LastIdInRow; ++j)
-            {
-                if (m_ScoreCard[j].isMarked())
-                {
-                    PossibleBingoIndices.push_back(j);
-                }
-                else
-                {
-                    // this row cannot have a bingo anymore
-                    PossibleBingoIndices.clear();
-                    break;
-                }
-            }
-            if (PossibleBingoIndices.size() == m_NumColumns)
-            {
-                qDebug() << "Found a bingo!";
-                return true;
-            }
-        }
-        return false;
-    };
-
-    /**
-     * @brief Checks for a possible bingo in vertical direction.
-     * If a bingo is found, the function returns true and @b PossibleBingoIndices
-     * contains the corresponding indices of the number fields forming the bingo.
-     */
-    const auto checkVertically = [&]() -> bool
-    {
-        for (int i = 0; i < m_NumColumns; ++i)
-        {
-            const auto LastIdInCol = (i % m_NumColumns) + m_NumFields - m_NumColumns;
-            for (int j = i; j <= LastIdInCol; j += m_NumColumns)
-            {
-                if (m_ScoreCard[j].isMarked())
-                {
-                    PossibleBingoIndices.push_back(j);
-                }
-                else
-                {
-                    // this column cannot have a bingo anymore
-                    PossibleBingoIndices.clear();
-                    break;
-                }
-            }
-            if (PossibleBingoIndices.size() == NumRows)
-            {
-                qDebug() << "Found a bingo!";
-                return true;
-            }
-        }
-        return false;
-    };
-
-    if (checkHorizontally() || checkVertically())
-    {
-        for (const auto Idx : PossibleBingoIndices)
-        {
-            m_ScoreCard[Idx].setPartOfBingo();
-        }
-
-        if (!PossibleBingoIndices.empty())
-        {
-            emit dataChanged(createIndex(PossibleBingoIndices.front(), 0),
-                             createIndex(PossibleBingoIndices.back(), 0),
-                             {PartOfBingoRole});
-        }
-
-        setHasBingo(!PossibleBingoIndices.empty());
+        // every column has the chance of containing a bingo
+        PossibleBingoColumns[i] = true;
+        // every row has the chance of containing a bingo
+        PossibleBingoRows[i] = true;
     }
+
+    for (int i = 0; i < m_NumFields; ++i)
+    {
+        const auto FieldIsMarked = m_ScoreCard[i].isMarked();
+
+        // check horizontally
+        const auto CurrentRowId = (i - (i % m_NumColumns)) / m_NumColumns;
+        PossibleBingoRows[CurrentRowId] &= FieldIsMarked;
+
+        // check vertically
+        PossibleBingoColumns[i % m_NumColumns] &= FieldIsMarked;
+    }
+
+    /**
+     * @brief Checks if there are elements in @a PossibleBingos that indicate a
+     * bingo and sets the corresponding number fields as part of the bingo.
+     * @a Type indicates the direction of the bingo (i.e. horizontal/vertical/...)
+     * @returns true, if there is a bingo
+     * @returns false otherwise
+     */
+    const auto setPartOfBingo = [this](const unordered_map<int, bool>& PossibleBingos,
+                                       eBingoType Type) -> bool
+    {
+        const auto Step = Type == VERTICAL ? m_NumColumns : 1;
+        for (const auto& [Idx, HasBingo] : PossibleBingos)
+        {
+            if (HasBingo)
+            {
+                auto FirstFieldId = Idx;
+                auto LastFieldId = m_NumFields;
+
+                if (Type == HORIZONTAL)
+                {
+                    FirstFieldId = Idx * m_NumColumns;
+                    LastFieldId = FirstFieldId + m_NumColumns;
+                }
+
+                for (int i = FirstFieldId; i < LastFieldId; i += Step)
+                {
+                    m_ScoreCard[i].setPartOfBingo();
+                }
+                emit dataChanged(createIndex(FirstFieldId, 0),
+                                 createIndex(LastFieldId, 0), {PartOfBingoRole});
+                return true;
+            }
+        }
+        return false;
+    };
+
+    setHasBingo(setPartOfBingo(PossibleBingoRows, HORIZONTAL)
+                || setPartOfBingo(PossibleBingoColumns, VERTICAL));
 }
 
 

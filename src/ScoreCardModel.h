@@ -118,6 +118,17 @@ protected:
         LETTER_INVALID = -1,
     };
 
+    /**
+     * @brief The eBingoType enum defines the different directions of a bingo
+     * (i.e. horizontal, vertical, diagonal, ...)
+     */
+    enum eBingoType
+    {
+        HORIZONTAL,
+        VERTICAL,
+        DIAGONAL
+    };
+
 
     /**
      * @brief Creates a scorecard with randomly filled number fields.
