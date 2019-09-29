@@ -57,6 +57,9 @@ Page {
     id: numberInput
     width: height
 
+    enabled: !scoreCardModel.hasBingo
+    cursorVisible: false
+
     placeholderText: "B13"
     font.bold: true
     font.pointSize: 24
@@ -67,8 +70,6 @@ Page {
     anchors.top: scoreCard.bottom
     anchors.topMargin: -root.offset
     anchors.horizontalCenter: parent.horizontalCenter
-
-    cursorVisible: false
 
     onPressed: clear()
 
