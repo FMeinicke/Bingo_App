@@ -55,7 +55,7 @@ public:
      * @reimp
      * @brief Get the number of items (i.e. CScoreCardNumberField objects) of this model.
      */
-    int rowCount(const QModelIndex& /*parent*/) const override;
+    int rowCount(const QModelIndex& /*parent*/ = QModelIndex()) const override;
 
     /**
      * @reimp
