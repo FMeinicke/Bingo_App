@@ -102,7 +102,6 @@ Page {
       onButtonClicked: {
         if (clickedButton === StandardButton.Yes) {
           scoreCardModel.newCard()
-          scoreCard.state = ""
         }
       }
     }
@@ -130,7 +129,6 @@ Page {
       onButtonClicked: {
         if (clickedButton === StandardButton.Yes) {
           scoreCardModel.clearCard()
-          scoreCard.state = ""
         }
       }
     }
