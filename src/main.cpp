@@ -70,8 +70,9 @@ int main(int argc, char* argv[])
     qmlRegisterType<CScoreCardNumberField>(
                 "de.dhge.moco.fm.ScoreCardNumberField", 1, 0,
                 "ScoreCardNumberFieldType");
-    CScoreCardModel ScoreCardModel;
-    Engine.rootContext()->setContextProperty("scoreCardModel", &ScoreCardModel);
+    qmlRegisterType<CScoreCardModel>(
+                "de.dhge.moco.fm.ScoreCardModel", 1, 0,
+                "ScoreCardModel");
 
     // auto generated code
     const QUrl Url(QStringLiteral("qrc:/qml/main.qml"));

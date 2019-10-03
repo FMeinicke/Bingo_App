@@ -10,6 +10,7 @@ import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.5
 import QtQuick.Window 2.3
 import QtQuick.Dialogs 1.2
+import de.dhge.moco.fm.ScoreCardModel 1.0
 
 Page {
   id: root
@@ -33,31 +34,104 @@ Page {
 
   property int offset: 75
 
-  Component.onCompleted: scoreCardModel.newCard()
+  Component.onCompleted: scoreCardsView.newCards()
 
   Keys.onBackPressed: confirmLeaveDialog.open()
 
-  BingoCardForm {
-    id: scoreCard
-    scale: 0.6
+  SwipeView {
+    id: scoreCardsView
+
+    property var numScoreCards: 5 ///< change this to get more or less scorecards
+    property list<BingoCardForm> bingoCards
+
     anchors.top: parent.top
     anchors.topMargin: -root.offset
     anchors.horizontalCenter: parent.horizontalCenter
+    height: 420
+    width: 350
+    scale: 0.6
+
+    spacing: 0
+
+    // dynamically create the bingo scorecards
+    Component.onCompleted: {
+      for (var i = 0; i < numScoreCards; i++) {
+        let component = Qt.createComponent("BingoCardForm.qml")
+        if (component.status == Component.Ready) {
+          let bingoCard = component.createObject(scoreCardsView)
+          bingoCards.push(bingoCard)
+        }
+      }
+    }
+
+    // checks if any of the bingo scorecards has a bingo
+    function hasBingo() {
+      for (var i = 0; i < bingoCards.length; i++) {
+        if (bingoCards[i].model.hasBingo) {
+          return true
+        }
+        return false
+      }
+    }
+
+    // marks the given num on all of the scorecards and shows an error if num is invalid
+    function markValidNumberOnAll(num) {
+      for (var i = 0; i < bingoCards.length; i++) {
+        const cardModel = bingoCards[i].model
+        if (!cardModel.markValidNumber(num)) {
+          errorMsg.show(qsTr(cardModel.readLastError()))
+          return
+        }
+        cardModel.checkForBingo()
+      }
+      numberInput.clear()
+    }
+
+    function clearAllCards() {
+      for (var i = 0; i < bingoCards.length; i++) {
+        bingoCards[i].model.clearCard()
+      }
+    }
+
+    // give new cards
+    function newCards() {
+      for (var i = 0; i < bingoCards.length; i++) {
+        bingoCards[i].model.newCard()
+      }
+    }
 
     ToolTip {
       id: errorMsg
-      anchors.centerIn: parent
+      anchors.centerIn: scoreCardsView
       visible: false
       timeout: 3000
       delay: 500
     }
   }
 
+  PageIndicator {
+    id: indicator
+
+    anchors.bottom: scoreCardsView.bottom
+    anchors.bottomMargin: 0.9 * root.offset
+    anchors.horizontalCenter: parent.horizontalCenter
+
+    count: scoreCardsView.count
+    currentIndex: scoreCardsView.currentIndex
+
+    interactive: true
+    onCurrentIndexChanged: scoreCardsView.setCurrentIndex(currentIndex)
+  }
+
   TextField {
     id: numberInput
     width: height
 
-    enabled: !scoreCardModel.hasBingo
+    Component.onCompleted: {
+      enabled = Qt.binding(function () {
+        return !scoreCardsView.hasBingo()
+      })
+    }
     cursorVisible: false
 
     placeholderText: "B13"
@@ -67,19 +141,15 @@ Page {
     inputMethodHints: Qt.ImhUppercaseOnly
     horizontalAlignment: Text.AlignHCenter
 
-    anchors.top: scoreCard.bottom
+    anchors.top: scoreCardsView.bottom
     anchors.topMargin: -root.offset
     anchors.horizontalCenter: parent.horizontalCenter
 
     onPressed: clear()
 
     onEditingFinished: {
-      if (!scoreCardModel.markValidNumber(displayText)) {
-        errorMsg.show(qsTr(scoreCardModel.readLastError()))
-        return
-      }
-      scoreCardModel.checkForBingo()
-      clear()
+      scoreCardsView.markValidNumberOnAll(displayText)
+      //      enabled = !scoreCardsView.hasBingo()
     }
   }
 
@@ -88,7 +158,7 @@ Page {
     text: qsTr("New Cards")
     font.pointSize: 14
 
-    anchors.top: scoreCard.bottom
+    anchors.top: scoreCardsView.bottom
     anchors.topMargin: -root.offset
     anchors.left: parent.left
     anchors.leftMargin: root.offset / 3
@@ -102,7 +172,7 @@ Page {
 
       onButtonClicked: {
         if (clickedButton === StandardButton.Yes) {
-          scoreCardModel.newCard()
+          scoreCardsView.newCards()
         }
       }
     }
@@ -115,7 +185,7 @@ Page {
     text: qsTr("Reset Cards")
     font.pointSize: 14
 
-    anchors.top: scoreCard.bottom
+    anchors.top: scoreCardsView.bottom
     anchors.topMargin: -root.offset
     anchors.right: parent.right
     anchors.rightMargin: root.offset / 3
@@ -129,7 +199,7 @@ Page {
 
       onButtonClicked: {
         if (clickedButton === StandardButton.Yes) {
-          scoreCardModel.clearCard()
+          scoreCardsView.clearAllCards()
         }
       }
     }

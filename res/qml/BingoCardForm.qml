@@ -8,6 +8,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Window 2.3
 import QtGraphicalEffects 1.0
+import de.dhge.moco.fm.ScoreCardModel 1.0
 
 Item {
   id: root
@@ -15,7 +16,9 @@ Item {
   width: 350
   height: 420
 
-  state: scoreCardModel.hasBingo ? "bingo" : ""
+  property alias model: scoreCardModel
+
+  state: model.hasBingo ? "bingo" : ""
 
   states: [
     State {
@@ -114,10 +117,13 @@ Item {
     x: backgroundImage.padding
     y: backgroundImage.cellSize + 3 * backgroundImage.padding / 2
 
-    model: scoreCardModel
+    model: ScoreCardModel {
+      id: scoreCardModel
+    }
+
     delegate: ScoreCardDelegate {
-      width: gridView.cellWidth
       height: gridView.cellHeight
+      width: gridView.cellWidth
     }
   }
 }
