@@ -13,15 +13,17 @@
 #include <QDebug>
 
 #include <cmath>
+#include <random>
+#include <set>
 #include <unordered_map>
+#include <vector>
 
 using namespace std;
 
 //============================================================================
-CScoreCardModel::CScoreCardModel(QObject* parent) :
-    QAbstractListModel(parent),
-    m_ScoreCard(makeRandomScoreCard()),
-    m_LastError("No error")
+CScoreCardModel::CScoreCardModel(QObject* parent) : QAbstractListModel(parent),
+                                                    m_ScoreCard(makeRandomScoreCard()),
+                                                    m_LastError("No error")
 {
 }
 
@@ -134,8 +136,7 @@ void CScoreCardModel::checkForBingo()
      * @returns false otherwise
      */
     const auto setPartOfBingo = [this](const unordered_map<int, bool>& PossibleBingos,
-                                       eBingoType Type) -> bool
-    {
+                                       eBingoType Type) -> bool {
         const auto Step = Type == VERTICAL ? m_NumColumns : 1;
         for (const auto& [Idx, HasBingo] : PossibleBingos)
         {
@@ -162,10 +163,8 @@ void CScoreCardModel::checkForBingo()
         return false;
     };
 
-    setHasBingo(setPartOfBingo(PossibleBingoRows, HORIZONTAL)
-                || setPartOfBingo(PossibleBingoColumns, VERTICAL));
+    setHasBingo(setPartOfBingo(PossibleBingoRows, HORIZONTAL) || setPartOfBingo(PossibleBingoColumns, VERTICAL));
 }
-
 
 //============================================================================
 void CScoreCardModel::clearCard()
@@ -194,43 +193,52 @@ void CScoreCardModel::newCard()
     setHasBingo(false);
 }
 
-
 //============================================================================
 QList<CScoreCardNumberField> CScoreCardModel::makeRandomScoreCard()
 {
-    QList<CScoreCardNumberField> ScoreCard;
-
-    // initialise random seed
-    srand(time(nullptr));
-
-    unordered_map<int, int> TakenNumbers(m_NumFields);
-
     /**
-     * @brief Calculates a unique random number between @a lower and @a upper.
+     * @brief Generates all of the random numbers for one scorecard and returns
+     * them in a vector<int>.
      */
-    auto uniqueRandBetween = [&TakenNumbers] (int lower, int upper) -> int
-    {
-        int RandomNumber{};
-        do
-        {
-            RandomNumber = rand() % (upper + 1 - lower) + lower;
-        }
-        while (TakenNumbers[RandomNumber] == 1);
-        TakenNumbers[RandomNumber]++;
+    const auto generateRandomNumbers = []() -> vector<int> {
+        vector<int> RandomNumbers;
 
-        return RandomNumber;
+        // seed the random number generator
+        static mt19937 Generator(time(nullptr));
+
+        for (size_t i = 0; i < m_NumColumns; ++i)
+        {
+            const auto MinNumber = m_MaxColNumberCount * i + 1;
+            const auto MaxNumber = MinNumber + m_MaxColNumberCount - 1;
+            uniform_int_distribution<> Distribution(MinNumber, MaxNumber);
+
+            set<int> RandomNumberSet;
+            while (size(RandomNumberSet) < m_NumColumns)
+            {
+                RandomNumberSet.insert(Distribution(Generator));
+            }
+
+            const auto NewElementIter =
+                RandomNumbers.insert(end(RandomNumbers),
+                                     begin(RandomNumberSet),
+                                     end(RandomNumberSet));
+            // because the numbers were sorted in the RandomNumberSet we need to
+            // shuffle them to make a nice random scorecard
+            shuffle(NewElementIter, end(RandomNumbers), Generator);
+        }
+        return RandomNumbers;
     };
 
+    const auto RandomNumbers = generateRandomNumbers();
+
     const auto CenterFieldId = static_cast<int>(floor(m_NumFields / 2));
+    QList<CScoreCardNumberField> ScoreCard;
+
     for (int i = 0; i < m_NumFields; ++i)
     {
-        const auto ColumnId = i % m_NumColumns + 1;
-        const auto Num = uniqueRandBetween(m_MaxColNumberCount * (ColumnId - 1) + 1,
-                                           m_MaxColNumberCount * ColumnId);
         // center field is a free field
-        const auto Type = i == CenterFieldId ? CScoreCardNumberField::FREE_SPACE :
-                                               CScoreCardNumberField::NORMAL_SPACE;
-        ScoreCard.append(CScoreCardNumberField(Num, Type));
+        const auto Type = i == CenterFieldId ? CScoreCardNumberField::FREE_SPACE : CScoreCardNumberField::NORMAL_SPACE;
+        ScoreCard.append(CScoreCardNumberField(RandomNumbers[i], Type));
     }
 
     return ScoreCard;
@@ -274,11 +282,9 @@ CScoreCardModel::eBingoLetter CScoreCardModel::bingoLetterToColumnId(const QChar
     }
 }
 
-
 //============================================================================
 void CScoreCardModel::setHasBingo(bool hasBingo)
 {
-
     m_HasBingo = hasBingo;
     emit hasBingoChanged();
 }

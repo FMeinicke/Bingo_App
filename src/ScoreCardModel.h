@@ -165,7 +165,7 @@ private:
 
     static constexpr int m_NumFields{25};
     static constexpr int m_NumColumns{5};
-    // for each column there are 15 different numbers to pick from randomly
+    /// for each column there are 15 different numbers to pick from randomly
     static constexpr int m_MaxColNumberCount{15};
 
     QList<CScoreCardNumberField> m_ScoreCard;

@@ -110,12 +110,14 @@ Item {
   GridView {
     id: gridView
     interactive: false
+    flow: GridView.FlowTopToBottom
+
+    x: backgroundImage.padding
+    y: backgroundImage.cellSize + 3 * backgroundImage.padding / 2
     cellHeight: backgroundImage.cellSize
     cellWidth: backgroundImage.cellSize
     width: 5 * cellWidth
     height: 5 * cellHeight
-    x: backgroundImage.padding
-    y: backgroundImage.cellSize + 3 * backgroundImage.padding / 2
 
     model: ScoreCardModel {
       id: scoreCardModel
