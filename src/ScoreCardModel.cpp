@@ -197,16 +197,16 @@ void CScoreCardModel::checkForBingo()
 }
 
 //============================================================================
-void CScoreCardModel::clearCard()
+void CScoreCardModel::removeAllMarkers()
 {
-    for (auto& el : m_ScoreCard)
-    {
-        if (el.fieldType() == CScoreCardNumberField::NORMAL_SPACE)
-        {
-            el.mark(false);
-            el.setPartOfBingo(false);
-        }
-    }
+    for_each(begin(m_ScoreCard), end(m_ScoreCard),
+             [](CScoreCardNumberField& field) {
+                if (field.fieldType() == CScoreCardNumberField::NORMAL_SPACE)
+                {
+                    field.mark(false);
+                    field.setPartOfBingo(false);
+                }
+             });
     emit dataChanged(createIndex(0, 0), createIndex(m_NumFields, 0),
                      {MarkedRole, PartOfBingoRole});
 
@@ -219,6 +219,20 @@ void CScoreCardModel::newCard()
     m_ScoreCard.clear();
     m_ScoreCard = makeRandomScoreCard();
     emit dataChanged(createIndex(0, 0), createIndex(m_NumFields, 0));
+
+    setHasBingo(false);
+}
+
+//============================================================================
+void CScoreCardModel::clearCard()
+{
+    for_each(begin(m_ScoreCard), end(m_ScoreCard),
+             [](CScoreCardNumberField& field) {
+                 field.setNumber(0);
+             });
+    removeAllMarkers();
+    emit dataChanged(createIndex(0, 0), createIndex(m_NumFields, 0));
+    emit isValidChanged();
 
     setHasBingo(false);
 }

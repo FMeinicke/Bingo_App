@@ -102,12 +102,18 @@ public:
     /**
      * @brief Remove all markers from the scorecard.
      */
-    Q_INVOKABLE void clearCard();
+    Q_INVOKABLE void removeAllMarkers();
 
     /**
      * @brief Makes a new random scorecard.
      */
     Q_INVOKABLE void newCard();
+
+    /**
+     * @brief Sets all number fields of this scorecard to 0. Useful for when the
+     * user enters all of the numbers on the scorecard.
+     */
+    Q_INVOKABLE void clearCard();
 
 signals:
     /**
