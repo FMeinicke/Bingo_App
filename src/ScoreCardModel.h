@@ -53,6 +53,12 @@ public:
 
     /**
      * @reimp
+     * @brief setData
+     */
+    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
+
+    /**
+     * @reimp
      * @brief Get the number of items (i.e. CScoreCardNumberField objects) of this model.
      */
     int rowCount(const QModelIndex& /*parent*/ = QModelIndex()) const override;
@@ -169,7 +175,7 @@ private:
     static constexpr int m_MaxColNumberCount{15};
 
     QList<CScoreCardNumberField> m_ScoreCard;
-    QString m_LastError; ///< contains a description of the last occurred error
+    QString m_LastError;    ///< contains a description of the last occurred error
     bool m_HasBingo{false}; ///< indicates whether the scorecard has a bingo
 };
 

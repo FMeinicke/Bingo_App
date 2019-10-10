@@ -21,9 +21,10 @@
 using namespace std;
 
 //============================================================================
-CScoreCardModel::CScoreCardModel(QObject* parent) : QAbstractListModel(parent),
-                                                    m_ScoreCard(makeRandomScoreCard()),
-                                                    m_LastError("No error")
+CScoreCardModel::CScoreCardModel(QObject* parent) :
+    QAbstractListModel(parent),
+    m_ScoreCard(makeRandomScoreCard()),
+    m_LastError("No error")
 {
 }
 
@@ -44,6 +45,24 @@ QVariant CScoreCardModel::data(const QModelIndex& index, int role) const
         qWarning() << "Unknown role" << role << "for CScoreCardModel::data";
         return QVariant();
     }
+}
+
+//============================================================================
+bool CScoreCardModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+    if (role != NumberRole)
+    {
+        qWarning() << "Tried to set data \"" << value
+                   << "\" which does not have the required role "
+                      "eScoreCardNumberFieldRoles::NumberRole!";
+        return false;
+    }
+
+    qDebug() << "Set data at" << index << "with role" << role << "to value" << value;
+    m_ScoreCard[index.row()].setNumber(value.toInt());
+    emit dataChanged(index, index, {NumberRole});
+    emit isValidChanged();
+    return true;
 }
 
 //============================================================================
