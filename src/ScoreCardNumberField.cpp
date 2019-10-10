@@ -103,6 +103,12 @@ void CScoreCardNumberField::setFieldType(const eFieldType& fieldType)
 }
 
 //============================================================================
+bool CScoreCardNumberField::isFreeField() const
+{
+    return m_FieldType == FREE_SPACE;
+}
+
+//============================================================================
 bool CScoreCardNumberField::isPartOfBingo() const
 {
     return m_PartOfBingo;

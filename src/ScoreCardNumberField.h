@@ -80,7 +80,7 @@ public:
     void mark(bool marked = true);
 
     /**
-     * @brief Returns the interal number of this number field
+     * @brief Returns the internal number of this number field
      * @return
      */
     int number() const;
@@ -99,6 +99,11 @@ public:
      * @brief Set the type of this number field to @a fieldType
      */
     void setFieldType(const eFieldType& fieldType);
+
+    /**
+     * @brief Conveniwnce function to check if the type of this field is @b FREE_FIELD.
+     */
+    bool isFreeField() const;
 
     /**
      * @brief Returns whether this number field is part of a bingo row/column/diagonal
