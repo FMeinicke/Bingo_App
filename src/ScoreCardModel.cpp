@@ -89,6 +89,16 @@ bool CScoreCardModel::hasBingo() const
 }
 
 //============================================================================
+bool CScoreCardModel::isValid() const
+{
+    const auto valid = all_of(begin(m_ScoreCard), end(m_ScoreCard),
+                              [](const CScoreCardNumberField& field) -> bool {
+                                  return field.isFreeField() ? true : field.number() > 0;
+                              });
+    return valid;
+}
+
+//============================================================================
 QString CScoreCardModel::readLastError() const
 {
     return m_LastError;
@@ -182,7 +192,8 @@ void CScoreCardModel::checkForBingo()
         return false;
     };
 
-    setHasBingo(setPartOfBingo(PossibleBingoRows, HORIZONTAL) || setPartOfBingo(PossibleBingoColumns, VERTICAL));
+    setHasBingo(setPartOfBingo(PossibleBingoRows, HORIZONTAL) ||
+                setPartOfBingo(PossibleBingoColumns, VERTICAL));
 }
 
 //============================================================================
@@ -256,7 +267,8 @@ QList<CScoreCardNumberField> CScoreCardModel::makeRandomScoreCard()
     for (int i = 0; i < m_NumFields; ++i)
     {
         // center field is a free field
-        const auto Type = i == CenterFieldId ? CScoreCardNumberField::FREE_SPACE : CScoreCardNumberField::NORMAL_SPACE;
+        const auto Type = i == CenterFieldId ? CScoreCardNumberField::FREE_SPACE :
+                                               CScoreCardNumberField::NORMAL_SPACE;
         ScoreCard.append(CScoreCardNumberField(RandomNumbers[i], Type));
     }
 
@@ -267,14 +279,14 @@ QList<CScoreCardNumberField> CScoreCardModel::makeRandomScoreCard()
 bool CScoreCardModel::getValidBingoNumber(const QString& StringNumber, int& IntNumber)
 {
     bool ok;
-    IntNumber = StringNumber.mid(1).toInt(&ok);
+    IntNumber = StringNumber.midRef(1).toInt(&ok);
 
     if (ok)
     {
         const auto ColumnId = bingoLetterToColumnId(StringNumber.front());
         const auto LowerBound = 1 + m_MaxColNumberCount * ColumnId;
         const auto UpperBound = LowerBound + m_MaxColNumberCount;
-        return (IntNumber >= LowerBound && IntNumber < UpperBound);
+        return (IntNumber >= LowerBound) && (IntNumber < UpperBound);
     }
     return false;
 }

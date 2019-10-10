@@ -23,6 +23,7 @@ class CScoreCardModel : public QAbstractListModel
     Q_OBJECT
 public:
     Q_PROPERTY(bool hasBingo READ hasBingo NOTIFY hasBingoChanged)
+    Q_PROPERTY(bool isValid READ isValid NOTIFY isValidChanged)
 
     /**
      * @brief The eScoreCardNumberFieldRoles enum defines the different roles
@@ -42,7 +43,6 @@ public:
      * @brief Construct a new CScoreCardModel with @a parent as the parent object
      */
     CScoreCardModel(QObject* parent = nullptr);
-
 
     /**
      * @reimp
@@ -73,6 +73,13 @@ public:
      * @brief Returns whether this scorecard has a bingo
      */
     bool hasBingo() const;
+
+    /**
+     * @brief Returns if this is a valid scorecard, i.e. if all fields contains
+     * valid numbers. Used to validate a scorecard after entering the numbers
+     * before starting a game.
+     */
+    bool isValid() const;
 
     /**
      * @brief Get the error message of the error that occurred latest.
@@ -107,6 +114,12 @@ signals:
      * @brief This signal is emitted whenever the scorecard has a bingo.
      */
     void hasBingoChanged();
+
+    /**
+     * @brief This signal is emitted whenever the scorecard is filled with only
+     * valid numbers.
+     */
+    void isValidChanged();
 
 protected:
     /**
