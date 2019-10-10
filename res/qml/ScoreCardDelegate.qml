@@ -9,14 +9,23 @@ Item {
   property color bingoColor: Material.color(Material.Red)
   property color markingColor: Material.primary
 
-  state: partOfBingo ? "bingo" : ""
+  state: model.partOfBingo ? "bingo" : ""
 
   states: [
     State {
       name: "bingo"
       PropertyChanges {
         target: wrapper
+
         markingColor: bingoColor
+      }
+    },
+    State {
+      name: "edit"
+      PropertyChanges {
+        target: textField
+
+        readOnly: false
       }
     }
   ]
@@ -53,21 +62,52 @@ Item {
     }
   ]
 
-  Text {
-    // center field is a free field -> it's number shouldn't be displayed
-    text: fieldType === ScoreCardNumberFieldType.FREE_SPACE ? "" : number
-    font.bold: true
-    fontSizeMode: Text.Fit
-    font.pixelSize: 30
-    minimumPixelSize: 12
+  // makes the textField editable when clicked on
+  MouseArea {
+    anchors.fill: parent
+    onClicked: textField.forceActiveFocus()
+  }
+
+  TextInput {
+    id: textField
+
     anchors.centerIn: parent
+
+    // center field is a free field -> it's number shouldn't be displayed
+    text: (model.fieldType === ScoreCardNumberFieldType.FREE_SPACE
+           || model.number === 0) ? "" : model.number
+    font.bold: true
+    font.pixelSize: 30
+
+    readOnly: true
+
+    inputMethodHints: Qt.ImhDigitsOnly
+    validator: IntValidator {
+      property int maxColNumberCount: 15
+      property int numColumns: 5
+      property int minAcceptableNum: ((index - index % numColumns) / numColumns)
+                                     * maxColNumberCount + 1
+
+      bottom: minAcceptableNum
+      top: minAcceptableNum + maxColNumberCount - 1
+    }
+
+    onEditingFinished: {
+      model.number = text
+    }
+
+    onActiveFocusChanged: {
+      if (!acceptableInput) {
+        clear()
+      }
+    }
   }
 
   Rectangle {
     id: marking
 
     // center field is a free field -> marked by default but shouldn't be displayed
-    visible: fieldType === ScoreCardNumberFieldType.FREE_SPACE ? false : marked
+    visible: model.fieldType === ScoreCardNumberFieldType.FREE_SPACE ? false : model.marked
 
     anchors.fill: parent
     scale: 0.9

@@ -29,7 +29,7 @@ Page {
       id: buttonCustom
       title: "Custom\n Score Cards"
       font.pointSize: 15
-      qmlFile: "CustomCardsForm.ui.qml"
+      qmlFile: "CustomCardsForm.qml"
     }
 
     MenuButton {

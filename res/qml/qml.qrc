@@ -2,7 +2,7 @@
     <qresource prefix="/qml">
         <file>ChooseGameForm.ui.qml</file>
         <file>main.qml</file>
-        <file>CustomCardsForm.ui.qml</file>
+        <file>CustomCardsForm.qml</file>
         <file>MenuBackIcon.qml</file>
         <file>ScanCardsForm.ui.qml</file>
         <file>MenuButton.qml</file>

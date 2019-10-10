@@ -14,9 +14,20 @@ import de.dhge.moco.fm.ScoreCardModel 1.0
 
 Page {
   id: root
+
+  property var customModels: []
+
   width: Screen.width
   height: Screen.height
   focusPolicy: Qt.StrongFocus
+
+  state: customModels.length > 0 ? "custom" : ""
+
+  states: [
+    State {
+      name: "custom"
+    }
+  ]
 
   MessageDialog {
     id: confirmLeaveDialog
@@ -41,7 +52,7 @@ Page {
   SwipeView {
     id: scoreCardsView
 
-    property var numScoreCards: 5 ///< change this to get more or less scorecards
+    property var numScoreCards: customModels.length > 0 ? customModels.length : 5 ///< change this to get more or less scorecards when playing random cards
     property list<BingoCardForm> bingoCards
 
     anchors.top: parent.top
@@ -58,7 +69,15 @@ Page {
       for (var i = 0; i < numScoreCards; i++) {
         let component = Qt.createComponent("BingoCardForm.qml")
         if (component.status == Component.Ready) {
-          let bingoCard = component.createObject(scoreCardsView)
+          let bingoCard
+          if (customModels) {
+            bingoCard = component.createObject(scoreCardsView, {
+                                                 "scoreCardModel": customModels[i]
+                                               })
+          } else {
+            bingoCard = component.createObject(scoreCardsView)
+          }
+
           bingoCards.push(bingoCard)
         }
       }
@@ -67,7 +86,7 @@ Page {
     // checks if any of the bingo scorecards has a bingo
     function hasBingo() {
       for (var i = 0; i < bingoCards.length; i++) {
-        if (bingoCards[i].model.hasBingo) {
+        if (bingoCards[i].scoreCardModel.hasBingo) {
           return true
         }
         return false
@@ -77,7 +96,7 @@ Page {
     // marks the given num on all of the scorecards and shows an error if num is invalid
     function markValidNumberOnAll(num) {
       for (var i = 0; i < bingoCards.length; i++) {
-        const cardModel = bingoCards[i].model
+        const cardModel = bingoCards[i].scoreCardModel
         if (!cardModel.markValidNumber(num)) {
           errorMsg.show(qsTr(cardModel.readLastError()))
           return
@@ -89,14 +108,14 @@ Page {
 
     function clearAllCards() {
       for (var i = 0; i < bingoCards.length; i++) {
-        bingoCards[i].model.clearCard()
+        bingoCards[i].scoreCardModel.removeAllMarkers()
       }
     }
 
     // give new cards
     function newCards() {
       for (var i = 0; i < bingoCards.length; i++) {
-        bingoCards[i].model.newCard()
+        bingoCards[i].scoreCardModel.newCard()
       }
     }
 
@@ -111,6 +130,8 @@ Page {
 
   PageIndicator {
     id: indicator
+
+    visible: count > 1
 
     anchors.bottom: scoreCardsView.bottom
     anchors.bottomMargin: 0.9 * root.offset
@@ -149,7 +170,6 @@ Page {
 
     onEditingFinished: {
       scoreCardsView.markValidNumberOnAll(displayText)
-      //      enabled = !scoreCardsView.hasBingo()
     }
   }
 
@@ -172,7 +192,11 @@ Page {
 
       onButtonClicked: {
         if (clickedButton === StandardButton.Yes) {
+          if (root.state === "custom") {
+            stackView.pop()
+          } else {
           scoreCardsView.newCards()
+          }
         }
       }
     }

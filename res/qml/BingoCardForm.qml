@@ -7,6 +7,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Window 2.3
+import QtQuick.Controls.Material 2.12
 import QtGraphicalEffects 1.0
 import de.dhge.moco.fm.ScoreCardModel 1.0
 
@@ -16,17 +17,35 @@ Item {
   width: 350
   height: 420
 
-  property alias model: scoreCardModel
+  property ScoreCardModel scoreCardModel
+  property bool isValid: scoreCardModel.isValid
 
-  state: model.hasBingo ? "bingo" : ""
+  Component.onCompleted: {
+    // create a new random scorecard if we don't get a custom card from the user
+    if (!scoreCardModel) {
+      scoreCardModel = Qt.createQmlObject(
+            "import de.dhge.moco.fm.ScoreCardModel 1.0; ScoreCardModel{}", this)
+    }
+  }
+
+  state: scoreCardModel.hasBingo ? "bingo" : ""
 
   states: [
     State {
       name: "bingo"
       PropertyChanges {
         target: bingoImage
+
         opacity: 1
         scale: 1
+      }
+    },
+    State {
+      name: "edit"
+      PropertyChanges {
+        target: gridView
+
+        focus: true
       }
     }
   ]
@@ -119,13 +138,20 @@ Item {
     width: 5 * cellWidth
     height: 5 * cellHeight
 
-    model: ScoreCardModel {
-      id: scoreCardModel
-    }
+    model: scoreCardModel
 
     delegate: ScoreCardDelegate {
       height: gridView.cellHeight
       width: gridView.cellWidth
+
+      state: root.state
+    }
+
+    highlight: Rectangle {
+      visible: false //root.state === "edit"
+      color: Material.color(Material.Teal, Material.Shade300)
+      opacity: 0.7
+      radius: 5
     }
   }
 }

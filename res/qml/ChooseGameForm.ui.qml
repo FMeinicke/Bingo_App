@@ -14,6 +14,7 @@ Page {
   height: 617
 
   title: qsTr("Home")
+
   ColumnLayout {
     id: columnLayout
     anchors.fill: parent
