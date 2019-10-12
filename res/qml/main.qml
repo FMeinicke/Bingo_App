@@ -1,9 +1,11 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Window 2.3
+import QtQuick.Layouts 1.12
 
 ApplicationWindow {
   id: window
+
   visible: true
   width: Screen.width
   height: Screen.height
@@ -11,77 +13,65 @@ ApplicationWindow {
   header: ToolBar {
     contentHeight: label.height
 
-    ToolButton {
-      id: toolButton
+    RowLayout {
+      anchors.fill: parent
 
-      Rectangle {
-        width: label.height
-        height: label.height
-        color: "transparent"
+      Label {
+        id: label
 
-        MouseArea {
-          anchors.fill: parent
-          onClicked: {
-            menuBackIcon.state = menuBackIcon.state === "menu" ? "back" : "menu"
-            if (drawer.position === 1.0) {
-              drawer.close()
-            } else {
-              drawer.open()
-            }
+        text: qsTr("Mobile Bingo")
+        font.pixelSize: Qt.application.font.pixelSize * 1.6
+        color: "black"
+
+        height: 50
+        horizontalAlignment: Qt.AlignHCenter
+        verticalAlignment: Qt.AlignVCenter
+        Layout.fillWidth: true
+      }
+
+      ToolButton {
+        id: toolButton
+
+        property bool menuOpened: false
+
+        onClicked: {
+          if (menuOpened) {
+            menu.close()
+          } else {
+            menu.open()
           }
+          menuOpened = !menuOpened
         }
 
-        MenuBackIcon {
-          id: menuBackIcon
-          anchors.centerIn: parent
+        MenuIcon {
+          id: menuIcon
+
+          anchors.fill: parent
         }
       }
-    }
-
-    Label {
-      id: label
-      text: qsTr("Mobile Bingo")
-      font.pixelSize: Qt.application.font.pixelSize * 1.6
-      color: "black"
-
-      height: 50
-      width: window.width
-      verticalAlignment: Text.AlignVCenter
-      horizontalAlignment: Text.AlignHCenter
     }
   }
 
-  Drawer {
-    id: drawer
-    x: 0
-    y: header.implicitHeight
-    width: window.width * 0.66
-    height: window.height - header.implicitHeight
+  Menu {
+    id: menu
 
-    onOpened: menuBackIcon.state = "back"
-    onClosed: menuBackIcon.state = "menu"
+    x: label.width
 
-    Column {
-      anchors.fill: parent
+    MenuItem {
+      text: qsTr("Settings")
+      onTriggered: stackView.push("SettingsForm.qml")
+    }
 
-      ItemDelegate {
-        text: qsTr("Settings")
-        width: parent.width
-        anchors.verticalCenterOffset: height / 2 - 50
-        topPadding: window.height - 100
-
-        icon.source: "qrc:/images/settings.png"
-
-        onClicked: {
-          stackView.push("SettingsForm.ui.qml")
-          drawer.close()
-        }
-      }
+    MenuItem {
+      text: qsTr("About")
+      onTriggered: stackView.push("AboutForm.qml")
+      enabled: true
     }
   }
 
   StackView {
     id: stackView
+
     anchors.fill: parent
 
     initialItem: "ChooseGameForm.ui.qml"
@@ -92,6 +82,7 @@ ApplicationWindow {
 
     Timer {
       id: timer
+
       interval: 2000
       running: stackView.wantsQuit
       repeat: false
@@ -103,6 +94,7 @@ ApplicationWindow {
 
     ToolTip {
       id: quitMsg
+
       text: qsTr("Press again to quit...")
       y: parent.height - 50
       visible: stackView.wantsQuit

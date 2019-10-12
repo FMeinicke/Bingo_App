@@ -3,7 +3,7 @@
         <file>ChooseGameForm.ui.qml</file>
         <file>main.qml</file>
         <file>CustomCardsForm.qml</file>
-        <file>MenuBackIcon.qml</file>
+        <file>MenuIcon.qml</file>
         <file>ScanCardsForm.ui.qml</file>
         <file>MenuButton.qml</file>
         <file>BingoCardForm.qml</file>
