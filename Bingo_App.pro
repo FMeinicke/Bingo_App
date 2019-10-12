@@ -15,11 +15,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         src/ScoreCardModel.cpp \
         src/ScoreCardNumberField.cpp \
+        src/ScoreCardSettings.cpp \
         src/main.cpp
 
 HEADERS += \
     src/ScoreCardModel.h \
-    src/ScoreCardNumberField.h
+    src/ScoreCardNumberField.h \
+    src/ScoreCardSettings.h
 
 RESOURCES += res/qml/qml.qrc \
     res/icons/icons.qrc \

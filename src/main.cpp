@@ -15,6 +15,7 @@
 
 #include "ScoreCardModel.h"
 #include "ScoreCardNumberField.h"
+#include "ScoreCardSettings.h"
 
 /**
  * @brief A custom message handler for formatting console output.
@@ -73,6 +74,12 @@ int main(int argc, char* argv[])
     qmlRegisterType<CScoreCardModel>(
                 "de.dhge.moco.fm.ScoreCardModel", 1, 0,
                 "ScoreCardModel");
+    qmlRegisterSingletonType<CScoreCardSettings>(
+                "de.dhge.moco.fm.ScoreCardSettings", 1, 0,
+                "ScoreCardSettings",
+                [](QQmlEngine* /*unused*/, QJSEngine* /*unused*/) -> QObject* {
+        return CScoreCardSettings::instance();
+    });
 
     // auto generated code
     const QUrl Url(QStringLiteral("qrc:/qml/main.qml"));
