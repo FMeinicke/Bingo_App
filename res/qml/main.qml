@@ -65,8 +65,10 @@ ApplicationWindow {
     MenuItem {
       text: qsTr("About")
       onTriggered: stackView.push("AboutForm.qml")
-      enabled: true
+      enabled: false
     }
+
+    onClosed: toolButton.menuOpened = false
   }
 
   StackView {
