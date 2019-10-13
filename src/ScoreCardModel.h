@@ -14,6 +14,11 @@
 
 #include "ScoreCardNumberField.h"
 
+//============================================================================
+//                            FORWARD DECLARATIONS
+//============================================================================
+class CScoreCardSettings;
+
 /**
  * @brief The CScoreCard class represents a single bingo scorecard
  * consisting of CScoreCardNumberFields.
@@ -42,7 +47,7 @@ public:
     /**
      * @brief Construct a new CScoreCardModel with @a parent as the parent object
      */
-    CScoreCardModel(QObject* parent = nullptr);
+    explicit CScoreCardModel(QObject* parent = nullptr);
 
     /**
      * @reimp
@@ -151,7 +156,8 @@ protected:
     {
         HORIZONTAL,
         VERTICAL,
-        DIAGONAL
+        DIAGONAL_0, ///< first diagonal (field IDs: 0, 6, 12, 18, 24) -> diag. ID: 0
+        DIAGONAL_4, ///< second diagonal (field IDs: 4, 8, 12, 16, 20)  -> diag. ID: 4
     };
 
 
@@ -196,6 +202,7 @@ private:
     QList<CScoreCardNumberField> m_ScoreCard;
     QString m_LastError;    ///< contains a description of the last occurred error
     bool m_HasBingo{false}; ///< indicates whether the scorecard has a bingo
+    CScoreCardSettings* m_SettingsInstance{nullptr};
 };
 
 #endif // CSCORECARDMODEL_H

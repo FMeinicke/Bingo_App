@@ -29,14 +29,14 @@ public:
     static CScoreCardSettings* instance();
 
     /**
-     * @brief Get whether the @b checkForBingo() method should also check for
-     * diagonal bingos.
+     * @brief Get whether the @b CScoreCardModel::checkForBingo() method should
+     * also check for diagonal bingos.
      */
     bool detectDiagonal() const;
 
     /**
-     * @brief Set whether the @b checkForBingo() method should also check for
-     * diagonal bingos.
+     * @brief Set whether the @b CScoreCardModel::checkForBingo() method should
+     * also check for diagonal bingos.
      */
     void setDetectDiagonal(bool detectDiagonal);
 

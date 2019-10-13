@@ -9,6 +9,7 @@
 //                                   INCLUDES
 //============================================================================
 #include "ScoreCardModel.h"
+#include "ScoreCardSettings.h"
 
 #include <QDebug>
 
@@ -24,7 +25,8 @@ using namespace std;
 CScoreCardModel::CScoreCardModel(QObject* parent) :
     QAbstractListModel(parent),
     m_ScoreCard(makeRandomScoreCard()),
-    m_LastError("No error")
+    m_LastError("No error"),
+    m_SettingsInstance(CScoreCardSettings::instance())
 {
 }
 
@@ -137,6 +139,7 @@ void CScoreCardModel::checkForBingo()
 {
     unordered_map<int, bool> PossibleBingoColumns;
     unordered_map<int, bool> PossibleBingoRows;
+    unordered_map<int, bool> PossibleBingoDiagonals;
     for (int i = 0; i < m_NumColumns; ++i)
     {
         // every column has the chance of containing a bingo
@@ -144,6 +147,10 @@ void CScoreCardModel::checkForBingo()
         // every row has the chance of containing a bingo
         PossibleBingoRows[i] = true;
     }
+    // every diagonal has the chance of containing a bingo, but only if the user
+    // wants to play with diagonal bingos
+    PossibleBingoDiagonals[DIAGONAL_0] = m_SettingsInstance->detectDiagonal();
+    PossibleBingoDiagonals[DIAGONAL_4] = m_SettingsInstance->detectDiagonal();
 
     for (int i = 0; i < m_NumFields; ++i)
     {
@@ -154,7 +161,18 @@ void CScoreCardModel::checkForBingo()
         PossibleBingoRows[CurrentRowId] &= FieldIsMarked;
 
         // check vertically
-        PossibleBingoColumns[i % m_NumColumns] &= FieldIsMarked;
+        const auto CurrentColumnId = i % m_NumColumns;
+        PossibleBingoColumns[CurrentColumnId] &= FieldIsMarked;
+
+        // check diagonally
+        if (CurrentRowId == CurrentColumnId)
+        {
+            PossibleBingoDiagonals[DIAGONAL_0] &= FieldIsMarked;
+        }
+        if (CurrentRowId + CurrentColumnId == m_NumColumns - 1)
+        {
+            PossibleBingoDiagonals[DIAGONAL_4] &= FieldIsMarked;
+        }
     }
 
     /**
@@ -166,23 +184,50 @@ void CScoreCardModel::checkForBingo()
      */
     const auto setPartOfBingo = [this](const unordered_map<int, bool>& PossibleBingos,
                                        eBingoType Type) -> bool {
-        const auto Step = Type == VERTICAL ? m_NumColumns : 1;
+        const auto Step = [&Type]() -> int {
+            switch (Type)
+            {
+            case HORIZONTAL:
+                return 1;
+            case VERTICAL:
+                return m_NumColumns;
+            case DIAGONAL_0:
+                return m_NumColumns + 1;
+            case DIAGONAL_4:
+                return m_NumColumns - 1;
+            default:
+                // should not get here
+                qCritical() << "Invalid eBingoType" << Type << "!";
+                return -1;
+            }
+        }();
+
         for (const auto& [Idx, HasBingo] : PossibleBingos)
         {
             if (HasBingo)
             {
-                auto FirstFieldId = Idx;
-                auto LastFieldId = m_NumFields;
-
-                if (Type == HORIZONTAL)
-                {
-                    FirstFieldId = Idx * m_NumColumns;
-                    LastFieldId = FirstFieldId + m_NumColumns;
-                }
+                const auto [FirstFieldId, LastFieldId] = [&Type, Idx = Idx]() -> pair<int, int> {
+                    switch (Type)
+                    {
+                    case HORIZONTAL:
+                        return {Idx * m_NumColumns, (Idx + 1) * m_NumColumns};
+                    case VERTICAL:
+                        return {Idx, m_NumFields};
+                    case DIAGONAL_0:
+                        return {0, m_NumFields};
+                    case DIAGONAL_4:
+                        return {4, Idx * m_NumColumns};
+                    default:
+                        // should not get here
+                        qCritical() << "Invalid eBingoType" << Type << "!";
+                        return {-1, -1};
+                    }
+                }();
 
                 for (int i = FirstFieldId; i < LastFieldId; i += Step)
                 {
                     m_ScoreCard[i].setPartOfBingo();
+                    qDebug() << "Set" << i << "to be part of bingo";
                 }
                 emit dataChanged(createIndex(FirstFieldId, 0),
                                  createIndex(LastFieldId, 0), {PartOfBingoRole});
@@ -193,7 +238,9 @@ void CScoreCardModel::checkForBingo()
     };
 
     setHasBingo(setPartOfBingo(PossibleBingoRows, HORIZONTAL) ||
-                setPartOfBingo(PossibleBingoColumns, VERTICAL));
+                setPartOfBingo(PossibleBingoColumns, VERTICAL) ||
+                setPartOfBingo(PossibleBingoDiagonals, DIAGONAL_0) ||
+                setPartOfBingo(PossibleBingoDiagonals, DIAGONAL_4));
 }
 
 //============================================================================
