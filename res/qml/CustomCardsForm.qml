@@ -30,13 +30,27 @@ Page {
     customModels.push(scoreCard.scoreCardModel)
   }
 
+  Label {
+    id: description
+
+    anchors.top: parent.top
+    anchors.topMargin: 0.15 * root.offset
+    anchors.horizontalCenter: parent.horizontalCenter
+
+    text: qsTr("Enter the numbers on your scorecard into the \n"
+               + "corresponding fields of the card below")
+    font.pixelSize: Qt.application.font.pixelSize
+    horizontalAlignment: Text.AlignHCenter
+    verticalAlignment: Text.AlignVCenter
+  }
+
   BingoCardForm {
     id: scoreCard
 
     scale: 0.6
 
     anchors.top: parent.top
-    anchors.topMargin: -root.offset
+    anchors.topMargin: -0.25 * root.offset
     anchors.horizontalCenter: parent.horizontalCenter
 
     state: "edit"
