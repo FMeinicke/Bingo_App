@@ -95,6 +95,7 @@ Item {
 
   Image {
     id: bingoImage
+
     fillMode: Image.PreserveAspectFit
     anchors.fill: gridView
 
@@ -128,6 +129,9 @@ Item {
 
   GridView {
     id: gridView
+
+    state: root.state
+
     interactive: false
     flow: GridView.FlowTopToBottom
 
@@ -143,12 +147,10 @@ Item {
     delegate: ScoreCardDelegate {
       height: gridView.cellHeight
       width: gridView.cellWidth
-
-      state: root.state
     }
 
     highlight: Rectangle {
-      visible: false //root.state === "edit"
+      visible: root.state === "edit"
       color: Material.color(Material.Teal, Material.Shade300)
       opacity: 0.7
       radius: 5

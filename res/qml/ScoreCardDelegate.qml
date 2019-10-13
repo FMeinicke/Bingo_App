@@ -8,8 +8,17 @@ Item {
 
   property color bingoColor: Material.color(Material.Red)
   property color markingColor: Material.primary
+  property alias textField: textField
 
-  state: model.partOfBingo ? "bingo" : ""
+  state: {
+    if (model.partOfBingo) {
+      return "bingo"
+    } else if (GridView.view.state === "edit") {
+      return "edit"
+    } else {
+      return ""
+    }
+  }
 
   states: [
     State {
@@ -94,6 +103,15 @@ Item {
 
     onEditingFinished: {
       model.number = text
+      // give the next field focus so that the user doesn't have to manually
+      // select the next field
+      wrapper.GridView.view.currentIndex = index + 1
+
+      //      if (wrapper.GridView.view.currentItem.model.fieldType
+      //          === ScoreCardNumberFieldType.FREE_SPACE) {
+      //        wrapper.GridView.view.currentIndex = index + 1
+      //      }
+      wrapper.GridView.view.currentItem.textField.focus = true
     }
 
     onActiveFocusChanged: {

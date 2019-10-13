@@ -64,6 +64,7 @@ Page {
 
     spacing: 0
 
+    // TODO: Use Repeater instead
     // dynamically create the bingo scorecards
     Component.onCompleted: {
       for (var i = 0; i < numScoreCards; i++) {
@@ -195,7 +196,7 @@ Page {
           if (root.state === "custom") {
             stackView.pop()
           } else {
-          scoreCardsView.newCards()
+            scoreCardsView.newCards()
           }
         }
       }
