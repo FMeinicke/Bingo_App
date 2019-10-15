@@ -79,10 +79,11 @@ Page {
     function hasBingo() {
       for (var i = 0; i < bingoCards.length; i++) {
         if (bingoCards[i].scoreCardModel.hasBingo) {
+          scoreCardsView.setCurrentIndex(i)
           return true
         }
-        return false
       }
+      return false
     }
 
     // marks the given num on all of the scorecards and shows an error if num is invalid

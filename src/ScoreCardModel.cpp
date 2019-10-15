@@ -227,7 +227,6 @@ void CScoreCardModel::checkForBingo()
                 for (int i = FirstFieldId; i < LastFieldId; i += Step)
                 {
                     m_ScoreCard[i].setPartOfBingo();
-                    qDebug() << "Set" << i << "to be part of bingo";
                 }
                 emit dataChanged(createIndex(FirstFieldId, 0),
                                  createIndex(LastFieldId, 0), {PartOfBingoRole});
