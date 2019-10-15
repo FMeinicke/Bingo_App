@@ -52,8 +52,7 @@ Page {
   SwipeView {
     id: scoreCardsView
 
-    property var numScoreCards: customModels.length > 0 ? customModels.length : 5 ///< change this to get more or less scorecards when playing random cards
-    property list<BingoCardForm> bingoCards
+    property var bingoCards: contentChildren
 
     anchors.top: parent.top
     anchors.topMargin: -root.offset
@@ -64,23 +63,15 @@ Page {
 
     spacing: 0
 
-    // TODO: Use Repeater instead
-    // dynamically create the bingo scorecards
-    Component.onCompleted: {
-      for (var i = 0; i < numScoreCards; i++) {
-        let component = Qt.createComponent("BingoCardForm.qml")
-        if (component.status == Component.Ready) {
-          let bingoCard
-          if (customModels) {
-            bingoCard = component.createObject(scoreCardsView, {
-                                                 "scoreCardModel": customModels[i]
-                                               })
-          } else {
-            bingoCard = component.createObject(scoreCardsView)
-          }
+    Repeater {
+      id: repeater
 
-          bingoCards.push(bingoCard)
-        }
+      model: customModels.length > 0 ? customModels.length : 5 ///< change this to get more or less scorecards when playing random cards
+
+      BingoCardForm {
+        // scoreCardModel will be undefined if there is no custom model
+        // -> BingoCardForm will create a new model with random fields
+        scoreCardModel: customModels[index]
       }
     }
 
