@@ -24,18 +24,6 @@ Button {
   font.pointSize: 20
   Material.background: Material.color(Material.Green, Material.Shade200)
 
-  //  background: Rectangle {
-  //      color: "#ffffff"
-  //      border.color: "black"
-  //      radius: 10
-  //      Text {
-  //          text: qsTr(title)
-  //          font.pointSize: 20
-  //          verticalAlignment: Text.AlignVCenter
-  //          horizontalAlignment: Text.AlignHCenter
-  //          anchors.fill: parent
-  //      }
-  //  }
   onClicked: {
     if (qmlFile) {
       stackView.push(qmlFile)

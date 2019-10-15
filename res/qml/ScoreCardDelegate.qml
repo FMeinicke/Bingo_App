@@ -1,3 +1,9 @@
+//============================================================================
+/// \file   ChooseGameForm.ui.qml
+/// \author Florian Meinicke <florian.meinicke@t-online.de>
+/// \date   28.09.2019
+/// \brief  A page for choosing between the different game modes
+//============================================================================
 import QtQuick 2.12
 import QtQuick.Controls.Material 2.12
 import QtGraphicalEffects 1.0

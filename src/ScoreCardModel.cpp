@@ -204,34 +204,36 @@ void CScoreCardModel::checkForBingo()
 
         for (const auto& [Idx, HasBingo] : PossibleBingos)
         {
-            if (HasBingo)
+            if (!HasBingo)
             {
-                const auto [FirstFieldId, LastFieldId] = [&Type, Idx = Idx]() -> pair<int, int> {
-                    switch (Type)
-                    {
-                    case HORIZONTAL:
-                        return {Idx * m_NumColumns, (Idx + 1) * m_NumColumns};
-                    case VERTICAL:
-                        return {Idx, m_NumFields};
-                    case DIAGONAL_0:
-                        return {0, m_NumFields};
-                    case DIAGONAL_4:
-                        return {4, Idx * m_NumColumns};
-                    default:
-                        // should not get here
-                        qCritical() << "Invalid eBingoType" << Type << "!";
-                        return {-1, -1};
-                    }
-                }();
-
-                for (int i = FirstFieldId; i < LastFieldId; i += Step)
-                {
-                    m_ScoreCard[i].setPartOfBingo();
-                }
-                emit dataChanged(createIndex(FirstFieldId, 0),
-                                 createIndex(LastFieldId, 0), {PartOfBingoRole});
-                return true;
+                continue;
             }
+
+            const auto [FirstFieldId, LastFieldId] = [&Type, Idx = Idx]() -> pair<int, int> {
+                switch (Type)
+                {
+                case HORIZONTAL:
+                    return {Idx * m_NumColumns, (Idx + 1) * m_NumColumns};
+                case VERTICAL:
+                    return {Idx, m_NumFields};
+                case DIAGONAL_0:
+                    return {0, m_NumFields};
+                case DIAGONAL_4:
+                    return {m_NumColumns - 1, Idx * m_NumColumns};
+                default:
+                    // should not get here
+                    qCritical() << "Invalid eBingoType" << Type << "!";
+                    return {-1, -1};
+                }
+            }();
+
+            for (int i = FirstFieldId; i < LastFieldId; i += Step)
+            {
+                m_ScoreCard[i].setPartOfBingo();
+            }
+            emit dataChanged(createIndex(FirstFieldId, 0),
+                             createIndex(LastFieldId, 0), {PartOfBingoRole});
+            return true;
         }
         return false;
     };
@@ -246,7 +248,7 @@ void CScoreCardModel::checkForBingo()
 void CScoreCardModel::removeAllMarkers()
 {
     for_each(begin(m_ScoreCard), end(m_ScoreCard),
-             [](CScoreCardNumberField& field) {
+             [](CScoreCardNumberField& field) -> void {
                 if (field.fieldType() == CScoreCardNumberField::NORMAL_SPACE)
                 {
                     field.mark(false);
@@ -273,7 +275,7 @@ void CScoreCardModel::newCard()
 void CScoreCardModel::clearCard()
 {
     for_each(begin(m_ScoreCard), end(m_ScoreCard),
-             [](CScoreCardNumberField& field) {
+             [](CScoreCardNumberField& field) -> void {
                  field.setNumber(0);
              });
     removeAllMarkers();
@@ -339,16 +341,19 @@ QList<CScoreCardNumberField> CScoreCardModel::makeRandomScoreCard()
 bool CScoreCardModel::getValidBingoNumber(const QString& StringNumber, int& IntNumber)
 {
     bool ok;
+    // cut off the first character to only convert the actual number ro an integer
     IntNumber = StringNumber.midRef(1).toInt(&ok);
 
-    if (ok)
+    if (!ok)
     {
-        const auto ColumnId = bingoLetterToColumnId(StringNumber.front());
-        const auto LowerBound = 1 + m_MaxColNumberCount * ColumnId;
-        const auto UpperBound = LowerBound + m_MaxColNumberCount;
-        return (IntNumber >= LowerBound) && (IntNumber < UpperBound);
+        return false;
     }
-    return false;
+
+    const auto ColumnId = bingoLetterToColumnId(StringNumber.front());
+    const auto LowerBound = 1 + m_MaxColNumberCount * ColumnId;
+    const auto UpperBound = LowerBound + m_MaxColNumberCount;
+
+    return (IntNumber >= LowerBound) && (IntNumber < UpperBound);
 }
 
 //============================================================================
@@ -368,7 +373,7 @@ CScoreCardModel::eBingoLetter CScoreCardModel::bingoLetterToColumnId(const QChar
         return LETTER_O;
     default:
         // should not get here
-        qWarning("The given bingo letter '%c' is not valid!", Letter.toLatin1());
+        qWarning().nospace() << "The given bingo letter '" << Letter << "'is not valid!";
         return LETTER_INVALID;
     }
 }

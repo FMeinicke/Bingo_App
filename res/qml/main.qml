@@ -1,3 +1,9 @@
+//============================================================================
+/// \file   main.qml
+/// \author Florian Meinicke <florian.meinicke@t-online.de>
+/// \date   08.09.2019
+/// \brief  The starting screen of the app
+//============================================================================
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Window 2.3
