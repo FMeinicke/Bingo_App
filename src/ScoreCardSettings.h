@@ -21,6 +21,7 @@ class CScoreCardSettings : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool detectDiagonal READ detectDiagonal WRITE setDetectDiagonal NOTIFY detectDiagonalChanged)
+    Q_PROPERTY(uint numScoreCards READ numScoreCards WRITE setNumScoreCards NOTIFY numScoreCardsChanged)
 
 public:
     /**
@@ -40,8 +41,28 @@ public:
      */
     void setDetectDiagonal(bool detectDiagonal);
 
+    /**
+     * @brief Get the number of scorecards for a game with random scorecards.
+     */
+    uint numScoreCards() const;
+
+    /**
+     * @brief Set the number of scorecards to use for a game with random cards.
+     */
+    void setNumScoreCards(const uint& value);
+
 signals:
+    /**
+     * @brief This signal is emitted whenever the property @a detectDiagonal is changed.
+     */
     void detectDiagonalChanged();
+
+    /**
+     * @brief This signal is emitted whenever the number of scorecards for a game
+     * with random cards changes.
+     */
+    void numScoreCardsChanged();
+
 
 private:
     /**
@@ -52,6 +73,7 @@ private:
     static CScoreCardSettings* m_Instance;
 
     bool m_DetectDiagonal{true}; ///< whether to also check for diagonal bingos
+    uint m_NumScoreCards{5}; ///< how many scorecards to use or a random game
 };
 
 #endif // SCORECARDSETTINGS_H

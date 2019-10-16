@@ -11,6 +11,7 @@ import QtQuick.Controls 2.5
 import QtQuick.Window 2.3
 import QtQuick.Dialogs 1.2
 import de.dhge.moco.fm.ScoreCardModel 1.0
+import de.dhge.moco.fm.ScoreCardSettings 1.0
 
 Page {
   id: root
@@ -66,7 +67,7 @@ Page {
     Repeater {
       id: repeater
 
-      model: customModels.length > 0 ? customModels.length : 5 ///< change this to get more or less scorecards when playing random cards
+      model: customModels.length > 0 ? customModels.length : ScoreCardSettings.numScoreCards
 
       BingoCardForm {
         // scoreCardModel will be undefined if there is no custom model

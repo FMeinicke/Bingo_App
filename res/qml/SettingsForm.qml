@@ -12,13 +12,8 @@ import de.dhge.moco.fm.ScoreCardSettings 1.0
 Page {
   id: root
 
-  GroupBox {
-    id: gameSettingsBox
-
+  RowLayout {
     property int offset: 30
-    font.pointSize: Qt.application.font.pixelSize * 1.4
-
-    title: qsTr("Game Settings")
 
     anchors.top: parent.top
     anchors.topMargin: offset
@@ -27,19 +22,54 @@ Page {
     anchors.left: parent.left
     anchors.leftMargin: offset
 
-    ColumnLayout {
-      anchors.fill: parent
-      CheckBox {
-        text: qsTr("Detect diagonal Bingo")
-        font.pixelSize: Qt.application.font.pixelSize
+    GroupBox {
+      id: gameSettingsBox
 
-        Component.onCompleted: {
-          checked = ScoreCardSettings.detectDiagonal
+      font.pixelSize: Qt.application.font.pixelSize * 1.4
+
+      title: qsTr("Game Settings")
+
+      GridLayout {
+        columnSpacing: 6
+        columns: 2
+        anchors.fill: parent
+
+        Label {
+          text: qsTr("Number of Bingo scorecards")
+          font.pixelSize: Qt.application.font.pixelSize
+          Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
         }
 
-        onCheckedChanged: {
-          console.log("hello")
-          ScoreCardSettings.detectDiagonal = checked
+        SpinBox {
+          from: 1
+          to: 20
+
+          Layout.preferredWidth: 120
+          font.pixelSize: Qt.application.font.pixelSize
+
+          Component.onCompleted: {
+            value = ScoreCardSettings.numScoreCards
+          }
+
+          onValueModified: {
+            ScoreCardSettings.numScoreCards = value
+          }
+        }
+
+        Label {
+          text: qsTr("Detect diagonal Bingo")
+          font.pixelSize: Qt.application.font.pixelSize
+          Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+        }
+
+        CheckBox {
+          Component.onCompleted: {
+            checked = ScoreCardSettings.detectDiagonal
+          }
+
+          onCheckedChanged: {
+            ScoreCardSettings.detectDiagonal = checked
+          }
         }
       }
     }

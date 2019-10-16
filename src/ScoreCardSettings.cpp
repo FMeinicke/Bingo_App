@@ -37,7 +37,6 @@ bool CScoreCardSettings::detectDiagonal() const
 //============================================================================
 void CScoreCardSettings::setDetectDiagonal(bool detectDiagonal)
 {
-    qDebug() << "Set detectDiagonal to" << detectDiagonal;
     m_DetectDiagonal = detectDiagonal;
     emit detectDiagonalChanged();
 }
@@ -46,4 +45,18 @@ void CScoreCardSettings::setDetectDiagonal(bool detectDiagonal)
 CScoreCardSettings::CScoreCardSettings(QObject* parent) :
     QObject(parent)
 {
+}
+
+//============================================================================
+uint CScoreCardSettings::numScoreCards() const
+{
+    return m_NumScoreCards;
+}
+
+
+//============================================================================
+void CScoreCardSettings::setNumScoreCards(const uint& value)
+{
+    m_NumScoreCards = value;
+    emit numScoreCardsChanged();
 }
