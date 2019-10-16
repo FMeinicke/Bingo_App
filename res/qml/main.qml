@@ -88,6 +88,12 @@ ApplicationWindow {
     focus: true
     property bool wantsQuit: false
 
+    onFocusChanged: {
+      console.log("focus changed")
+      if (!focus) {
+        forceActiveFocus()
+      }
+    }
     Timer {
       id: timer
 
