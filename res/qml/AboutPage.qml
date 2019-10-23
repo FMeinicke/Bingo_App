@@ -1,5 +1,5 @@
 //============================================================================
-/// \file   AboutForm.qml
+/// \file   AboutPage.qml
 /// \author Florian Meinicke <florian.meinicke@t-online.de>
 /// \date   23.10.2019
 /// \brief  A page displaying information about the app

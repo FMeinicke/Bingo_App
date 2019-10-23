@@ -1,5 +1,5 @@
 //============================================================================
-/// \file   CustomCardsForm.qml
+/// \file   CustomCardsPage.qml
 /// \author Florian Meinicke <florian.meinicke@t-online.de>
 /// \date   08.09.2019
 /// \brief  A page for entering all of the numbers on a bingo card.

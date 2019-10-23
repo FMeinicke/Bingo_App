@@ -65,12 +65,12 @@ ApplicationWindow {
 
     MenuItem {
       text: qsTr("Settings")
-      onTriggered: stackView.push("SettingsForm.qml")
+      onTriggered: stackView.push("SettingsPage.qml")
     }
 
     MenuItem {
       text: qsTr("About")
-      onTriggered: stackView.push("AboutForm.qml")
+      onTriggered: stackView.push("AboutPage.qml")
     }
 
     onClosed: toolButton.menuOpened = false
@@ -81,7 +81,7 @@ ApplicationWindow {
 
     anchors.fill: parent
 
-    initialItem: "ChooseGameForm.ui.qml"
+    initialItem: "ChooseGamePage.ui.qml"
 
     // Implements back key navigation
     focus: true

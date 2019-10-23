@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/icons">
-        <file>bingo_app.png</file>
+    <!-- icon taken from https://icon-library.net/icon/bingo-icon-16.html -->
+    <file>bingo_app.png</file>
     </qresource>
 </RCC>

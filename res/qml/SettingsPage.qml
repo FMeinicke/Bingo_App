@@ -1,5 +1,5 @@
 //============================================================================
-/// \file   SettingsForm.qml
+/// \file   SettingsPage.qml
 /// \author Florian Meinicke <florian.meinicke@t-online.de>
 /// \date   10.10.2019
 /// \brief  A page for the app's settings

@@ -1,17 +1,17 @@
 <RCC>
     <qresource prefix="/qml">
-        <file>ChooseGameForm.ui.qml</file>
+        <file>ChooseGamePage.ui.qml</file>
         <file>main.qml</file>
-        <file>CustomCardsForm.qml</file>
+        <file>CustomCardsPage.qml</file>
         <file>MenuIcon.qml</file>
-        <file>ScanCardsForm.ui.qml</file>
+        <file>ScanCardsPage.ui.qml</file>
         <file>MenuButton.qml</file>
         <file>BingoCardForm.qml</file>
         <file>BingoGame.qml</file>
-        <file>ConfigClassicGameForm.ui.qml</file>
+        <file>ConfigClassicGamePage.ui.qml</file>
         <file>ScoreCardDelegate.qml</file>
-        <file>SettingsForm.qml</file>
-        <file>AboutForm.qml</file>
+        <file>SettingsPage.qml</file>
+        <file>AboutPage.qml</file>
     </qresource>
     <qresource prefix="/">
         <file>qtquickcontrols2.conf</file>

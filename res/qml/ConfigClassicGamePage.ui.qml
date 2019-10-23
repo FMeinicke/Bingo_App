@@ -1,5 +1,5 @@
 //============================================================================
-/// \file   ConfigClassicGameForm.ui.qml
+/// \file   ConfigClassicGamePage.ui.qml
 /// \author Florian Meinicke <florian.meinicke@t-online.de>
 /// \date   13.09.2019
 /// \brief  A page for configuring the classic mode of the bingo game
@@ -29,14 +29,14 @@ Page {
       id: buttonCustom
       title: "Custom\n Score Cards"
       font.pointSize: 15
-      qmlFile: "CustomCardsForm.qml"
+      qmlFile: "CustomCardsPage.qml"
     }
 
     MenuButton {
       id: buttonScan
       title: "Scan\n Score Cards"
       font.pointSize: 15
-      qmlFile: "ScanCardsForm.ui.qml"
+      qmlFile: "ScanCardsPage.ui.qml"
     }
   }
 }
