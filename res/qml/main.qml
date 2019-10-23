@@ -71,7 +71,6 @@ ApplicationWindow {
     MenuItem {
       text: qsTr("About")
       onTriggered: stackView.push("AboutForm.qml")
-      enabled: false
     }
 
     onClosed: toolButton.menuOpened = false
@@ -89,7 +88,6 @@ ApplicationWindow {
     property bool wantsQuit: false
 
     onFocusChanged: {
-      console.log("focus changed")
       if (!focus) {
         forceActiveFocus()
       }

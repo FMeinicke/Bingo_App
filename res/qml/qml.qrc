@@ -11,6 +11,7 @@
         <file>ConfigClassicGameForm.ui.qml</file>
         <file>ScoreCardDelegate.qml</file>
         <file>SettingsForm.qml</file>
+        <file>AboutForm.qml</file>
     </qresource>
     <qresource prefix="/">
         <file>qtquickcontrols2.conf</file>

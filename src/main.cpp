@@ -65,6 +65,9 @@ int main(int argc, char* argv[])
 
     QGuiApplication App(argc, argv);
 
+    QGuiApplication::setApplicationName("Mobile Bingo App");
+    QGuiApplication::setApplicationVersion("1.0.0");
+
     QQmlApplicationEngine Engine;
 
     // make C++ classes available to QML
@@ -78,18 +81,19 @@ int main(int argc, char* argv[])
                 "de.dhge.moco.fm.ScoreCardSettings", 1, 0,
                 "ScoreCardSettings",
                 [](QQmlEngine* /*unused*/, QJSEngine* /*unused*/) -> QObject* {
-        return CScoreCardSettings::instance();
-    });
+                    return CScoreCardSettings::instance();
+                });
 
     // auto generated code
     const QUrl Url(QStringLiteral("qrc:/qml/main.qml"));
     QObject::connect(&Engine, &QQmlApplicationEngine::objectCreated,
                      &App, [Url](QObject* Obj, const QUrl& ObjUrl) {
-        if (!Obj && Url == ObjUrl)
-        {
-            QCoreApplication::exit(-1);
-        }
-    }, Qt::QueuedConnection);
+                        if (!Obj && Url == ObjUrl)
+                        {
+                            QCoreApplication::exit(-1);
+                        }
+                    },
+                    Qt::QueuedConnection);
     Engine.load(Url);
 
     return App.exec();
