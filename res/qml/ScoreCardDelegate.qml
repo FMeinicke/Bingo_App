@@ -80,7 +80,11 @@ Item {
   // makes the textField editable when clicked on
   MouseArea {
     anchors.fill: parent
-    onClicked: textField.forceActiveFocus()
+    onClicked: {
+      // highlight the current field by giving the GridView the correct index
+      wrapper.GridView.view.currentIndex = index
+      textField.forceActiveFocus()
+    }
   }
 
   TextInput {
@@ -98,6 +102,7 @@ Item {
 
     inputMethodHints: Qt.ImhDigitsOnly
     validator: IntValidator {
+      id: intValidator
       property int maxColNumberCount: 15
       property int numColumns: 5
       property int minAcceptableNum: ((index - index % numColumns) / numColumns)
@@ -107,21 +112,33 @@ Item {
       top: minAcceptableNum + maxColNumberCount - 1
     }
 
-    onEditingFinished: {
+    function showError() {
+      errorMsg.show(
+            qsTr(
+              "Invalid number! \nThe number has to be in the range between %1 and %2!").arg(
+              intValidator.bottom).arg(intValidator.top))
+    }
+
+    Keys.onReturnPressed: {
+      if (!acceptableInput) {
+        if (text.length > 0) {
+          clear()
+          showError()
+        }
+        return
+      }
+
       model.number = text
+
       // give the next field focus so that the user doesn't have to manually
       // select the next field
       wrapper.GridView.view.currentIndex = index + 1
-
-      //      if (wrapper.GridView.view.currentItem.model.fieldType
-      //          === ScoreCardNumberFieldType.FREE_SPACE) {
-      //        wrapper.GridView.view.currentIndex = index + 1
-      //      }
       wrapper.GridView.view.currentItem.textField.focus = true
     }
 
     onActiveFocusChanged: {
-      if (!acceptableInput) {
+      if (text.length > 0 && !acceptableInput) {
+        showError()
         clear()
       }
     }

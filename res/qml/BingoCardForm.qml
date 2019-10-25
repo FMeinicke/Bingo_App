@@ -127,8 +127,25 @@ Item {
     rotation: -23
   }
 
+  ToolTip {
+    id: errorMsg
+    anchors.centerIn: parent
+    visible: false
+    timeout: 3000
+    delay: 500
+
+    contentItem: Text {
+      text: errorMsg.text
+      color: "white"
+      wrapMode: Text.WordWrap
+      horizontalAlignment: Text.AlignHCenter
+    }
+  }
+
   GridView {
     id: gridView
+
+    property alias errorMsg: errorMsg
 
     state: root.state
 
@@ -155,5 +172,7 @@ Item {
       opacity: 0.7
       radius: 5
     }
+
+    Component.onCompleted: currentIndex = -1
   }
 }
