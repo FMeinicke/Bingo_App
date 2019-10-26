@@ -15,6 +15,7 @@ Item {
   property color bingoColor: Material.color(Material.Red)
   property color markingColor: Material.primary
   property alias textField: textField
+  property bool isFreeField: model.fieldType === ScoreCardNumberFieldType.FREE_SPACE
 
   state: {
     if (model.partOfBingo) {
@@ -40,7 +41,8 @@ Item {
       PropertyChanges {
         target: textField
 
-        readOnly: false
+        // free field shouldn't be editable
+        readOnly: isFreeField
       }
     }
   ]
@@ -93,8 +95,7 @@ Item {
     anchors.centerIn: parent
 
     // center field is a free field -> it's number shouldn't be displayed
-    text: (model.fieldType === ScoreCardNumberFieldType.FREE_SPACE
-           || model.number === 0) ? "" : model.number
+    text: (isFreeField || model.number === 0) ? "" : model.number
     font.bold: true
     font.pixelSize: 30
 
@@ -132,7 +133,13 @@ Item {
 
       // give the next field focus so that the user doesn't have to manually
       // select the next field
-      wrapper.GridView.view.currentIndex = index + 1
+      if (!wrapper.GridView.view.currentItem.isFreeField) {
+        wrapper.GridView.view.currentIndex = index + 1
+      } else {
+        // center field is a free field -> doesn't need a number
+        wrapper.GridView.view.currentIndex = index + 2
+      }
+
       wrapper.GridView.view.currentItem.textField.focus = true
     }
 
@@ -148,7 +155,7 @@ Item {
     id: marking
 
     // center field is a free field -> marked by default but shouldn't be displayed
-    visible: model.fieldType === ScoreCardNumberFieldType.FREE_SPACE ? false : model.marked
+    visible: isFreeField ? false : model.marked
 
     anchors.fill: parent
     scale: 0.9
