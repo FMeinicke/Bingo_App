@@ -101,7 +101,7 @@ public:
     void setFieldType(const eFieldType& fieldType);
 
     /**
-     * @brief Conveniwnce function to check if the type of this field is @b FREE_FIELD.
+     * @brief Convenience function to check if the type of this field is @b FREE_FIELD.
      */
     bool isFreeField() const;
 
