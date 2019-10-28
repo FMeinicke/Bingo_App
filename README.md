@@ -18,6 +18,7 @@ Feel free to browse and play around with the source code.
 * Choose, whether you would like to play with diagonal bingos
 ### Custom
 * Create as many custom scorecards before playing
+* "Scan" a scorecard (basically you can just take a picture, but I wanted to play a bit with QML's `Camera` type)
 
 ## Things about QML I learned during development
 I didn't know right from the start how certain things are done in QML or how I would interact from QML with my C++ classes.
@@ -73,7 +74,7 @@ Component.onCompleted: {
   }
 }
 ```
-Later I stumbled across the `Repeater` QML object which essentially does the exact same thing while being less and better readable code. 
+Later, I stumbled across the `Repeater` QML object which essentially does the exact same thing while being better readable and less code. 
 The `Repeater` allows you to create any number of similar items. 
 It uses a model and a delegate. 
 For each item in the model a delegate is instantiated. 
