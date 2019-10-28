@@ -110,6 +110,18 @@ Page {
 
       onLinkActivated: Qt.openUrlExternally(link)
     }
+
+    Text {
+      width: parent.width
+      horizontalAlignment: Text.AlignHCenter
+
+      textFormat: Text.RichText
+      text: qsTr(
+              "<html>Material Icons: Downloaded from <a href='https://www.material.io/resources/icons/'>material.io</a></html>")
+      font.pixelSize: Qt.application.font.pixelSize
+
+      onLinkActivated: Qt.openUrlExternally(link)
+    }
   }
 }
 
