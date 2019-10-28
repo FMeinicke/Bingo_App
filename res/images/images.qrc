@@ -2,5 +2,7 @@
     <qresource prefix="/images">
         <file>score_card.png</file>
         <file>bingo.png</file>
+        <file>camera_capture.png</file>
+        <file>delete_forever.png</file>
     </qresource>
 </RCC>

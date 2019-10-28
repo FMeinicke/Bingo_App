@@ -36,7 +36,7 @@ Page {
       id: buttonScan
       title: "Scan\n Score Cards"
       font.pointSize: 15
-      qmlFile: "ScanCardsPage.ui.qml"
+      qmlFile: "ScanCardsPage.qml"
     }
   }
 }

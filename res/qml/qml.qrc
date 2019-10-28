@@ -4,7 +4,7 @@
         <file>main.qml</file>
         <file>CustomCardsPage.qml</file>
         <file>MenuIcon.qml</file>
-        <file>ScanCardsPage.ui.qml</file>
+        <file>ScanCardsPage.qml</file>
         <file>MenuButton.qml</file>
         <file>BingoCardForm.qml</file>
         <file>BingoGame.qml</file>
@@ -12,6 +12,9 @@
         <file>ScoreCardDelegate.qml</file>
         <file>SettingsPage.qml</file>
         <file>AboutPage.qml</file>
+        <file>CameraUI.qml</file>
+        <file>PhotoPreview.qml</file>
+        <file>CameraCaptureControls.qml</file>
     </qresource>
     <qresource prefix="/">
         <file>qtquickcontrols2.conf</file>
