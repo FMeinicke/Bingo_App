@@ -150,6 +150,7 @@ Item {
     state: root.state
 
     interactive: false
+    keyNavigationWraps: true
     flow: GridView.FlowTopToBottom
 
     x: backgroundImage.padding

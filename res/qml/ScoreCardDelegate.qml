@@ -92,6 +92,8 @@ Item {
   TextInput {
     id: textField
 
+    property GridView view: wrapper.GridView.view
+
     anchors.centerIn: parent
 
     // center field is a free field -> it's number shouldn't be displayed
@@ -100,6 +102,8 @@ Item {
     font.pixelSize: 30
 
     readOnly: true
+
+    EnterKey.type: Qt.EnterKeyNext
 
     inputMethodHints: Qt.ImhDigitsOnly
     validator: IntValidator {
@@ -133,14 +137,14 @@ Item {
 
       // give the next field focus so that the user doesn't have to manually
       // select the next field
-      if (!wrapper.GridView.view.currentItem.isFreeField) {
-        wrapper.GridView.view.currentIndex = index + 1
-      } else {
-        // center field is a free field -> doesn't need a number
-        wrapper.GridView.view.currentIndex = index + 2
+      view.moveCurrentIndexDown()
+
+      // center field is a free field -> doesn't need a number
+      if (view.currentItem.isFreeField) {
+        view.moveCurrentIndexDown()
       }
 
-      wrapper.GridView.view.currentItem.textField.focus = true
+      view.currentItem.textField.forceActiveFocus()
     }
 
     onActiveFocusChanged: {
