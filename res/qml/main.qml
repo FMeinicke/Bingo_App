@@ -81,7 +81,7 @@ ApplicationWindow {
 
     anchors.fill: parent
 
-    initialItem: "ChooseGamePage.ui.qml"
+    initialItem: "ConfigClassicGamePage.ui.qml" //"ChooseGamePage.ui.qml"
 
     // Implements back key navigation
     focus: true
