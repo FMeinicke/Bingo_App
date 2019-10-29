@@ -92,17 +92,6 @@ ApplicationWindow {
         forceActiveFocus()
       }
     }
-    Timer {
-      id: timer
-
-      interval: 2000
-      running: stackView.wantsQuit
-      repeat: false
-      onTriggered: {
-        // user didn't press back twice within the small intervall - doesn't want to quit
-        stackView.wantsQuit = false
-      }
-    }
 
     ToolTip {
       id: quitMsg
@@ -115,7 +104,7 @@ ApplicationWindow {
 
       onClosed: {
         if (stackView.wantsQuit) {
-          // user pressed back button twice within a small intervall- quit app
+          // user pressed back button twice within a small intervall - quit app
           window.close()
         }
       }
@@ -130,9 +119,6 @@ ApplicationWindow {
       } else if (!wantsQuit) {
         // close on next back button press
         wantsQuit = true
-      } else if (timer.running === true) {
-        // user pressed back button twice within a small intervall- quit app
-        window.close()
       }
     }
   }
