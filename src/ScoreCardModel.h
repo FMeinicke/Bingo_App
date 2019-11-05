@@ -134,21 +134,6 @@ signals:
 
 protected:
     /**
-     * @brief The eBingoLetter enum defines the column IDs of the letters
-     * 'B', 'I', 'N', 'G' and 'O' on a bingo scorecard. That means the first column
-     * on a scorecard has the letter 'B' and therefore ID `0' (or @a LETTER_B).
-     */
-    enum eBingoLetter
-    {
-        LETTER_B,
-        LETTER_I,
-        LETTER_N,
-        LETTER_G,
-        LETTER_O,
-        LETTER_INVALID = -1,
-    };
-
-    /**
      * @brief The eBingoType enum defines the different directions of a bingo
      * (i.e. horizontal, vertical, diagonal, ...)
      */
@@ -165,26 +150,6 @@ protected:
      * @brief Creates a scorecard with randomly filled number fields.
      */
     static QList<CScoreCardNumberField> makeRandomScoreCard();
-
-    /**
-     * @brief Converts the given @a StringNumber from a string to an integer and
-     * returns it in @a IntNumber. During conversion the first letter gets
-     * stripped off and therefore @a IntNumber contains just the integer after
-     * the letter (e.g. for the given string 'B13' @a IntNumber would contain `13').
-     * @returns true, if the number is valid and the conversion was succesfull.
-     * @a IntNumber contains the converted number.
-     * @returns false, if the number is not valid and the conversion was not
-     *  succesfull.@a IntNumber contains the value `0'.
-     */
-    static bool getValidBingoNumber(const QString& StringNumber, int& IntNumber);
-
-    /**
-     * @brief Converts the given @a Letter to an eBingoLetter that indicates the
-     * column ID for the @a Letter (i.e. letter 'B' corresponds to ID 0,
-     * 'I' to ID 1, and so on). If the letter is not one of 'B', 'I', 'N', 'G' or 'O'
-     * @a LETTER_INVALID is returned.
-     */
-    static eBingoLetter bingoLetterToColumnId(const QChar& Letter);
 
 private:
     /**

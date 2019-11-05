@@ -102,6 +102,7 @@ Page {
       }
     }
 
+    // removes all markers from every card
     function clearAllCards() {
       for (var i = 0; i < bingoCards.length; i++) {
         bingoCards[i].scoreCardModel.removeAllMarkers()
@@ -154,15 +155,14 @@ Page {
 
     cursorVisible: false
 
-    placeholderText: "B13"
+    placeholderText: "13"
 
     font.bold: true
     font.pointSize: 24
-    font.capitalization: Font.AllUppercase
     horizontalAlignment: Text.AlignHCenter
 
     // allow multiline input to keep the keyboard open after hitting enter
-    inputMethodHints: Qt.ImhUppercaseOnly | Qt.ImhMultiLine
+    inputMethodHints: Qt.ImhDigitsOnly | Qt.ImhMultiLine
 
     anchors.top: scoreCardsView.bottom
     anchors.topMargin: -root.offset
@@ -170,7 +170,7 @@ Page {
 
     onPressed: clear()
 
-    onTextEdited: {
+    onEditingFinished: {
       // because we allow multiline input we need to trim the trailing `CRLF'
       // to get a valid bingo number
       scoreCardsView.markValidNumberOnAll(displayText.trim())

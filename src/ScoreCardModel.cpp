@@ -115,8 +115,9 @@ bool CScoreCardModel::markValidNumber(const QString& Number)
         return true;
     }
 
-    int IntNumber;
-    if (!getValidBingoNumber(Number, IntNumber))
+    bool ok;
+    const int IntNumber = Number.toInt(&ok);
+    if (!ok && IntNumber > 0 && IntNumber <= m_NumFields * m_MaxColNumberCount)
     {
         qWarning() << "The given number" << Number << "is not a valid Bingo number!";
         m_LastError = "Invalid Bingo number!";
@@ -335,47 +336,6 @@ QList<CScoreCardNumberField> CScoreCardModel::makeRandomScoreCard()
     }
 
     return ScoreCard;
-}
-
-//============================================================================
-bool CScoreCardModel::getValidBingoNumber(const QString& StringNumber, int& IntNumber)
-{
-    bool ok;
-    // cut off the first character to only convert the actual number ro an integer
-    IntNumber = StringNumber.midRef(1).toInt(&ok);
-
-    if (!ok)
-    {
-        return false;
-    }
-
-    const auto ColumnId = bingoLetterToColumnId(StringNumber.front());
-    const auto LowerBound = 1 + m_MaxColNumberCount * ColumnId;
-    const auto UpperBound = LowerBound + m_MaxColNumberCount;
-
-    return (IntNumber >= LowerBound) && (IntNumber < UpperBound);
-}
-
-//============================================================================
-CScoreCardModel::eBingoLetter CScoreCardModel::bingoLetterToColumnId(const QChar& Letter)
-{
-    switch (Letter.toLatin1())
-    {
-    case 'B':
-        return LETTER_B;
-    case 'I':
-        return LETTER_I;
-    case 'N':
-        return LETTER_N;
-    case 'G':
-        return LETTER_G;
-    case 'O':
-        return LETTER_O;
-    default:
-        // should not get here
-        qWarning().nospace() << "The given bingo letter '" << Letter << "'is not valid!";
-        return LETTER_INVALID;
-    }
 }
 
 //============================================================================
