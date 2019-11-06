@@ -11,6 +11,7 @@
 //                                   INCLUDES
 //============================================================================
 #include <QAbstractListModel>
+#include <unordered_map>
 
 #include "ScoreCardNumberField.h"
 
@@ -157,6 +158,16 @@ private:
      * Emits @b hasBingoChanged to notify observers.
      */
     void setHasBingo(bool hasBingo);
+
+    /**
+     * @brief Checks if there are elements in @a PossibleBingos that indicate a
+     * bingo and sets the corresponding number fields as part of the bingo.
+     * @a Type indicates the direction of the bingo (i.e. horizontal/vertical/...)
+     * @returns true, if there is a bingo
+     * @returns false otherwise
+     */
+    bool setPartOfBingo(const std::unordered_map<int, bool>& PossibleBingos,
+                        eBingoType Type);
 
 
     static constexpr int m_NumFields{25};

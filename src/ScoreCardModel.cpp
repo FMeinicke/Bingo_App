@@ -16,7 +16,6 @@
 #include <cmath>
 #include <random>
 #include <set>
-#include <unordered_map>
 #include <vector>
 
 using namespace std;
@@ -176,69 +175,6 @@ void CScoreCardModel::checkForBingo()
         }
     }
 
-    /**
-     * @brief Checks if there are elements in @a PossibleBingos that indicate a
-     * bingo and sets the corresponding number fields as part of the bingo.
-     * @a Type indicates the direction of the bingo (i.e. horizontal/vertical/...)
-     * @returns true, if there is a bingo
-     * @returns false otherwise
-     */
-    const auto setPartOfBingo = [this](const unordered_map<int, bool>& PossibleBingos,
-                                       eBingoType Type) -> bool {
-        const auto Step = [&Type]() -> int {
-            switch (Type)
-            {
-            case HORIZONTAL:
-                return 1;
-            case VERTICAL:
-                return m_NumColumns;
-            case DIAGONAL_0:
-                return m_NumColumns + 1;
-            case DIAGONAL_4:
-                return m_NumColumns - 1;
-            default:
-                // should not get here
-                qCritical() << "Invalid eBingoType" << Type << "!";
-                return -1;
-            }
-        }();
-
-        for (const auto& [Idx, HasBingo] : PossibleBingos)
-        {
-            if (!HasBingo)
-            {
-                continue;
-            }
-
-            const auto [FirstFieldId, LastFieldId] = [&Type, Idx = Idx]() -> pair<int, int> {
-                switch (Type)
-                {
-                case HORIZONTAL:
-                    return {Idx * m_NumColumns, (Idx + 1) * m_NumColumns};
-                case VERTICAL:
-                    return {Idx, m_NumFields};
-                case DIAGONAL_0:
-                    return {0, m_NumFields};
-                case DIAGONAL_4:
-                    return {m_NumColumns - 1, Idx * m_NumColumns};
-                default:
-                    // should not get here
-                    qCritical() << "Invalid eBingoType" << Type << "!";
-                    return {-1, -1};
-                }
-            }();
-
-            for (int i = FirstFieldId; i < LastFieldId; i += Step)
-            {
-                m_ScoreCard[i].setPartOfBingo();
-            }
-            emit dataChanged(createIndex(FirstFieldId, 0),
-                             createIndex(LastFieldId, 0), {PartOfBingoRole});
-            return true;
-        }
-        return false;
-    };
-
     setHasBingo(setPartOfBingo(PossibleBingoRows, HORIZONTAL) ||
                 setPartOfBingo(PossibleBingoColumns, VERTICAL) ||
                 setPartOfBingo(PossibleBingoDiagonals, DIAGONAL_0) ||
@@ -343,4 +279,76 @@ void CScoreCardModel::setHasBingo(bool hasBingo)
 {
     m_HasBingo = hasBingo;
     emit hasBingoChanged();
+}
+
+//============================================================================
+bool CScoreCardModel::setPartOfBingo(const unordered_map<int, bool>& PossibleBingos,
+                                     eBingoType Type)
+{
+    int Step;
+    switch (Type)
+    {
+        case HORIZONTAL:
+            Step = 1;
+            break;
+        case VERTICAL:
+            Step = m_NumColumns;
+            break;
+        case DIAGONAL_0:
+            Step = m_NumColumns + 1;
+            break;
+        case DIAGONAL_4:
+            Step = m_NumColumns - 1;
+            break;
+        default:
+            // should not get here
+            qCritical() << "Invalid eBingoType" << Type << "!";
+            Step = -1;
+            break;
+    }
+
+    for (const auto& [Idx, HasBingo] : PossibleBingos)
+    {
+        if (!HasBingo)
+        {
+            continue;
+        }
+
+        int FirstFieldId;
+        int LastFieldId;
+        switch (Type)
+        {
+            case HORIZONTAL:
+                FirstFieldId = Idx * m_NumColumns;
+                LastFieldId = (Idx + 1) * m_NumColumns;
+                break;
+            case VERTICAL:
+                FirstFieldId = Idx;
+                LastFieldId = m_NumFields;
+                break;
+            case DIAGONAL_0:
+                FirstFieldId = 0;
+                LastFieldId = m_NumFields;
+                break;
+            case DIAGONAL_4:
+                FirstFieldId = m_NumColumns - 1;
+                LastFieldId = Idx * m_NumColumns;
+                break;
+            default:
+                // should not get here
+                qCritical() << "Invalid eBingoType" << Type << "!";
+                FirstFieldId = -1;
+                LastFieldId = -1;
+                break;
+        }
+
+        for (int i = FirstFieldId; i < LastFieldId; i += Step)
+        {
+            m_ScoreCard[i].setPartOfBingo();
+        }
+        emit dataChanged(createIndex(FirstFieldId, 0),
+                         createIndex(LastFieldId, 0), {PartOfBingoRole});
+        return true;
+    }
+    return false;
 }
