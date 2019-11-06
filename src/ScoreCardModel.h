@@ -88,15 +88,9 @@ public:
     bool isValid() const;
 
     /**
-     * @brief Get the error message of the error that occurred latest.
-     */
-    Q_INVOKABLE QString readLastError() const;
-
-    /**
      * @brief Mark the given @a Number on the scorecard if it is a valid bingo number.
      * @returns true, if the @a Number is valid
-     * @returns false, if the @a Number is not valid. Get the exact error message
-     * by calling @b readLastError()
+     * @returns false, if the @a Number is not valid
      */
     Q_INVOKABLE bool markValidNumber(const QString& Number);
 
@@ -181,7 +175,6 @@ private:
     static constexpr int m_MaxColNumberCount{15};
 
     QList<CScoreCardNumberField> m_ScoreCard;
-    QString m_LastError;    ///< contains a description of the last occurred error
     bool m_HasBingo{false}; ///< indicates whether the scorecard has a bingo
     CScoreCardSettings* m_SettingsInstance{nullptr};
 };

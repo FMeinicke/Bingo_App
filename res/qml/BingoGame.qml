@@ -94,10 +94,7 @@ Page {
       numberInput.clear()
       for (var i = 0; i < bingoCards.length; i++) {
         const cardModel = bingoCards[i].scoreCardModel
-        if (!cardModel.markValidNumber(num)) {
-          errorMsg.show(qsTr(cardModel.readLastError()))
-          return
-        }
+        cardModel.markValidNumber(num)
         cardModel.checkForBingo()
       }
     }
@@ -123,6 +120,13 @@ Page {
       visible: false
       timeout: 3000
       delay: 500
+
+      contentItem: Text {
+        text: errorMsg.text
+        color: "white"
+        wrapMode: Text.WordWrap
+        horizontalAlignment: Text.AlignHCenter
+      }
     }
   }
 
@@ -163,6 +167,12 @@ Page {
 
     // allow multiline input to keep the keyboard open after hitting enter
     inputMethodHints: Qt.ImhDigitsOnly | Qt.ImhMultiLine
+    validator: IntValidator {
+      id: intValidator
+
+      bottom: 1
+      top: 75
+    }
 
     anchors.top: scoreCardsView.bottom
     anchors.topMargin: -root.offset
@@ -170,10 +180,18 @@ Page {
 
     onPressed: clear()
 
-    onEditingFinished: {
-      // because we allow multiline input we need to trim the trailing `CRLF'
-      // to get a valid bingo number
-      scoreCardsView.markValidNumberOnAll(displayText.trim())
+    Keys.onReturnPressed: {
+      if (acceptableInput) {
+        // because we allow multiline input we need to trim the trailing `CRLF'
+        // to get a valid bingo number
+        scoreCardsView.markValidNumberOnAll(displayText.trim())
+      } else {
+        errorMsg.show(
+              qsTr(
+                "Invalid number! \nThe number has to be in the range between %1 and %2!").arg(
+                intValidator.bottom).arg(intValidator.top))
+        clear()
+      }
     }
   }
 

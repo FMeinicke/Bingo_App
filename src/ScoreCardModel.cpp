@@ -24,7 +24,6 @@ using namespace std;
 CScoreCardModel::CScoreCardModel(QObject* parent) :
     QAbstractListModel(parent),
     m_ScoreCard(makeRandomScoreCard()),
-    m_LastError("No error"),
     m_SettingsInstance(CScoreCardSettings::instance())
 {
 }
@@ -100,12 +99,6 @@ bool CScoreCardModel::isValid() const
 }
 
 //============================================================================
-QString CScoreCardModel::readLastError() const
-{
-    return m_LastError;
-}
-
-//============================================================================
 bool CScoreCardModel::markValidNumber(const QString& Number)
 {
     if (Number.isEmpty())
@@ -114,14 +107,9 @@ bool CScoreCardModel::markValidNumber(const QString& Number)
         return true;
     }
 
-    bool ok;
-    const int IntNumber = Number.toInt(&ok);
-    if (!ok && IntNumber > 0 && IntNumber <= m_NumFields * m_MaxColNumberCount)
-    {
-        qWarning() << "The given number" << Number << "is not a valid Bingo number!";
-        m_LastError = "Invalid Bingo number!";
-        return false;
-    }
+    // we know that the given Number string has to be a valid integer
+    // since it is validated in QML
+    const auto IntNumber = Number.toInt();
 
     const auto FieldIndex = m_ScoreCard.indexOf(CScoreCardNumberField(IntNumber));
     if (FieldIndex > -1)
@@ -130,7 +118,6 @@ bool CScoreCardModel::markValidNumber(const QString& Number)
         const auto FieldModelIndex = createIndex(FieldIndex, 0);
         emit dataChanged(FieldModelIndex, FieldModelIndex, {MarkedRole});
     }
-    m_LastError = "";
     return true;
 }
 
