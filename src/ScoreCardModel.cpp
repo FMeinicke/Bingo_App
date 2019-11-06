@@ -225,39 +225,6 @@ void CScoreCardModel::clearCard()
 //============================================================================
 QList<CScoreCardNumberField> CScoreCardModel::makeRandomScoreCard()
 {
-    /**
-     * @brief Generates all of the random numbers for one scorecard and returns
-     * them in a vector<int>.
-     */
-    const auto generateRandomNumbers = []() -> vector<int> {
-        vector<int> RandomNumbers;
-
-        // seed the random number generator
-        static mt19937 Generator(time(nullptr));
-
-        for (size_t i = 0; i < m_NumColumns; ++i)
-        {
-            const auto MinNumber = m_MaxColNumberCount * i + 1;
-            const auto MaxNumber = MinNumber + m_MaxColNumberCount - 1;
-            uniform_int_distribution<> Distribution(MinNumber, MaxNumber);
-
-            set<int> RandomNumberSet;
-            while (size(RandomNumberSet) < m_NumColumns)
-            {
-                RandomNumberSet.insert(Distribution(Generator));
-            }
-
-            const auto NewElementIter =
-                RandomNumbers.insert(end(RandomNumbers),
-                                     begin(RandomNumberSet),
-                                     end(RandomNumberSet));
-            // because the numbers were sorted in the RandomNumberSet we need to
-            // shuffle them to make a nice random scorecard
-            shuffle(NewElementIter, end(RandomNumbers), Generator);
-        }
-        return RandomNumbers;
-    };
-
     const auto RandomNumbers = generateRandomNumbers();
 
     const auto CenterFieldId = static_cast<int>(floor(m_NumFields / 2));
@@ -351,4 +318,35 @@ bool CScoreCardModel::setPartOfBingo(const unordered_map<int, bool>& PossibleBin
         return true;
     }
     return false;
+}
+
+//============================================================================
+std::vector<int> CScoreCardModel::generateRandomNumbers()
+{
+    vector<int> RandomNumbers;
+
+    // seed the random number generator
+    static mt19937 Generator(time(nullptr));
+
+    for (size_t i = 0; i < m_NumColumns; ++i)
+    {
+        const auto MinNumber = m_MaxColNumberCount * i + 1;
+        const auto MaxNumber = MinNumber + m_MaxColNumberCount - 1;
+        uniform_int_distribution<> Distribution(MinNumber, MaxNumber);
+
+        set<int> RandomNumberSet;
+        while (size(RandomNumberSet) < m_NumColumns)
+        {
+            RandomNumberSet.insert(Distribution(Generator));
+        }
+
+        const auto NewElementIter =
+            RandomNumbers.insert(end(RandomNumbers),
+                                 begin(RandomNumberSet),
+                                 end(RandomNumberSet));
+        // because the numbers were sorted in the RandomNumberSet we need to
+        // shuffle them to make a nice random scorecard
+        shuffle(NewElementIter, end(RandomNumbers), Generator);
+    }
+    return RandomNumbers;
 }

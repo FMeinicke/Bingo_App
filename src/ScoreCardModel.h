@@ -169,6 +169,11 @@ private:
     bool setPartOfBingo(const std::unordered_map<int, bool>& PossibleBingos,
                         eBingoType Type);
 
+    /**
+     * @brief Generates all of the random numbers for one scorecard and returns
+     * them in a vector<int>.
+     */
+    static std::vector<int> generateRandomNumbers();
 
     static constexpr int m_NumFields{25};
     static constexpr int m_NumColumns{5};
