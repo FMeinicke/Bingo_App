@@ -18,7 +18,9 @@ Feel free to browse and play around with the source code.
 * Choose, whether you would like to play with diagonal bingos
 ### Custom
 * Create as many custom scorecards before playing
-* "Scan" a scorecard (basically you can just take a picture, but I wanted to play a bit with QML's `Camera` type)
+* "Scan" a scorecard (basically you can just take a picture, but I wanted to play a bit with QML's `Camera` type.
+Therefore most of this code is taken from Qt's [declarative-camera example](https://code.qt.io/cgit/qt/qtmultimedia.git/tree/examples/multimedia/declarative-camera).
+I just modified some stuff and took out the things I didn't need.)
 
 ## Things about QML I learned during development
 I didn't know right from the start how certain things are done in QML or how I would interact from QML with my C++ classes.
