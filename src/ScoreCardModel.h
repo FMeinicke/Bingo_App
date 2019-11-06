@@ -89,8 +89,8 @@ public:
 
     /**
      * @brief Mark the given @a Number on the scorecard if it is a valid bingo number.
-     * @returns true, if the @a Number is valid
-     * @returns false, if the @a Number is not valid
+     * @returns true, if the @a Number appears on this scorecard and hence was marked
+     * @returns false, if the @a Number does not appear on this scorecard
      */
     Q_INVOKABLE bool markValidNumber(const QString& Number);
 

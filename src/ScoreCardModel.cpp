@@ -103,8 +103,8 @@ bool CScoreCardModel::markValidNumber(const QString& Number)
 {
     if (Number.isEmpty())
     {
-        // don't do anything with an empty input -> don't even show an error
-        return true;
+        // don't do anything with an empty input
+        return false;
     }
 
     // we know that the given Number string has to be a valid integer
@@ -112,12 +112,15 @@ bool CScoreCardModel::markValidNumber(const QString& Number)
     const auto IntNumber = Number.toInt();
 
     const auto FieldIndex = m_ScoreCard.indexOf(CScoreCardNumberField(IntNumber));
-    if (FieldIndex > -1)
+    if (FieldIndex < 0)
     {
-        m_ScoreCard[FieldIndex].mark();
-        const auto FieldModelIndex = createIndex(FieldIndex, 0);
-        emit dataChanged(FieldModelIndex, FieldModelIndex, {MarkedRole});
+        return false;
     }
+
+    m_ScoreCard[FieldIndex].mark();
+    const auto FieldModelIndex = createIndex(FieldIndex, 0);
+    emit dataChanged(FieldModelIndex, FieldModelIndex, {MarkedRole});
+
     return true;
 }
 
