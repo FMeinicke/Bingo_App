@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
     QGuiApplication App(argc, argv);
 
     QGuiApplication::setApplicationName("Mobile Bingo App");
-    QGuiApplication::setApplicationVersion("1.0.0");
+    QGuiApplication::setApplicationVersion("0.2.2");
 
     QQmlApplicationEngine Engine;
 
